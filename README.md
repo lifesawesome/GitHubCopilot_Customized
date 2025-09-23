@@ -40,7 +40,7 @@ erDiagram
 
 1. **Requirements Specifications and Agentic Implementation**
    - Use a custom prompt to define features and an implementation plan
-      - Use the "Plan" prompt compbined with the MonaFigurine.png file (found in ./docs/design) to create an implementation plan for a new product offering on the website.
+      - Use the "Plan" prompt combined with the MonaFigurine.png file (found in ./docs/design) to create an implementation plan for a new product offering on the website.
    - Generate UI components from design mockups (using Copilot Vision) and Generated Implementation Plan.
       - Reference the Implementation Plan created in the previous step to build out the new product offering on the website.
       - Use the MonaFigurine.png file to generate a product card component for the new product offering.
@@ -62,7 +62,7 @@ erDiagram
    - Use GitHub Copilot Internal Prompting to create a custom prompt file for the OctoCAT Supply project to update all existing documentation for the project.
       - Hint: Use the "Prompt Files" prompt to create a custom prompt file for the OctoCAT Supply project.  
    - Execute the custom prompt file to update all existing documentation for the project.
-      - Hint: Use the slash command to execute the prompt all existing documentation for the project.  Specifify the README.md file and the docs/architecture.md file if you only want that updated. 
+      - Hint: Use the slash command to execute the prompt all existing documentation for the project.  Specify the README.md file and the docs/architecture.md file if you only want that updated. 
 
 4. **Test Generation and Coverage Improvement**
    - Analyze existing test coverage
