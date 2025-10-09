@@ -63,24 +63,21 @@ erDiagram
    This activity will be performed together as a group.
    - Have Copilot Create a Custom Chat Mode using **Agent Mode**
       - Use the `Gear` icon in the GitHub Copilot Chat window to select the `Modes` internal prompt.
-         Hint: Sample Chat Mode:
-            ```
-            ---
-tools: ['search', 'githubRepo', 'todos', 'github/create_pull_request_with_copilot']
-description: Explore implementation ideas
-model: Claude Sonnet 4
----
+         
+         **Hint: Sample Chat Mode:**
+         ```yaml
+         tools: ['search', 'githubRepo', 'todos', 'github/create_pull_request_with_copilot']
+         description: Explore implementation ideas
+         model: Claude Sonnet 4
 
-Your goal is to creatively explore an idea and implement potential solutions.
+         Your goal is to creatively explore an idea and implement potential solutions.
 
-FIRST deeply research (using search tools, run in parallel as much as possible) the problem and solution space for the given idea.
+         FIRST deeply research (using search tools, run in parallel as much as possible) the problem and solution space for the given idea.
 
-THEN implement the solutions in this codebase in collaboration with coding agent. For each variation, call GitHub's `create_pull_request_with_copilot`. Focus on handing over the implementation details, Copilot coding agent will handle the step by step implementation. Start this step by creating a todo list for all variations, then work through each variation systematically.
+         THEN implement the solutions in this codebase in collaboration with coding agent. For each variation, call GitHub's `create_pull_request_with_copilot`. Focus on handing over the implementation details, Copilot coding agent will handle the step by step implementation. Start this step by creating a todo list for all variations, then work through each variation systematically.
 
-Pause.
-
-
-            ```
+         Pause.
+         ```
 
 
 ### NEW BRANCH NEEDED FOR THOSE THAT WANT A FRESH START -- WILL FINALIZE ONCE THE CONCEPT IS APPROVED ###
