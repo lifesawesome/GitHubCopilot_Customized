@@ -56,10 +56,10 @@ erDiagram
       - How does your response compare to before?
    - Review Existing GitHub Copilot Prompt files to learn about how they can help speed up your workflow.  Execute one if you'd like.
    - Use GitHub Copilot Internal Prompting to create a custom prompt file for the OctoCAT Supply project to update all existing documentation for the project.
-         - Hint: Use the "Prompt Files" prompt to create a custom prompt file for the OctoCAT Supply project.
-         - Sample Prompt: `Complete the prompt file to update the documentation of this project or the specified file mentioned by the user.  Only update the prompt file, do not update any documentation.`
-      - Execute the custom prompt file to update all existing documentation for the project.
-         - Hint: Use the slash command to execute the prompt all existing documentation for the project.  Specify the README.md file and the docs/architecture.md file if you only want that updated. 
+       - Hint: Use the "Prompt Files" prompt to create a custom prompt file for the OctoCAT Supply project.
+       - Sample Prompt: `Complete the prompt file to update the documentation of this project or the specified file mentioned by the user.  Only update the prompt file, do not update any documentation.`
+    - Execute the custom prompt file to update all existing documentation for the project.
+        - Hint: Use the slash command to execute the prompt all existing documentation for the project.  Specify the README.md file and the docs/architecture.md file if you only want that updated. 
 
 2. **GUIDED HANDS-ON: Create a Chat Mode**
    This activity will be performed together as a group.
@@ -87,7 +87,7 @@ erDiagram
 3. **Requirements Specifications and Agentic Implementation**
    - Use previously developed `custom chat mode` to define features and create an implementation plan
       - Use the /docs/design/MonaFigurine.png file (found in ./docs/design) to create a new product offering on the website.
-         - Sample Prompt: `Using the design in the ./docs/design/MonaFigurine.png file, create an a new product offering to the OctoCAT Supply website.  Price is $32.99, SKU is MONA-001, and description is "A beautiful handcrafted figurine inspired by the Mona Lisa."`
+          - Sample Prompt: `Using the design in the ./docs/design/MonaFigurine.png file, create an a new product offering to the OctoCAT Supply website.  Price is $32.99, SKU is MONA-001, and description is "A beautiful handcrafted figurine inspired by the Mona Lisa."`
       - Generate UI components from design mockups (using Copilot Vision) and Generated Implementation Plan.
       - Review the Pull Request in your Repo that was created by Copilot Agent Mode and merge the one you like best.
    - Use GitHub Copilot Agent mode to the Create Cart Page and Cart Icon.
