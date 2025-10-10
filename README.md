@@ -16,29 +16,9 @@ This isn't just another demo app - it's a carefully crafted showcase that demons
 - 🎯 **Custom Instructions** - Show how Copilot can be tailored to understand internal frameworks and standards
 - 📜 **Custom Prompt Files** - Automate repetitive tasks and documentation updates with ease
 
-## 🏗️ Architecture
+---
 
-The application is built using modern TypeScript with a clean separation of concerns:
-
-```mermaid
-erDiagram
-    Headquarters ||--o{ Branch: has
-    Branch ||--o{ Order: placed_at
-    Order ||--o{ OrderDetail: contains
-    OrderDetail ||--o{ OrderDetailDelivery: fulfilled_by
-    OrderDetail }|--|| Product: references
-    Delivery ||--o{ OrderDetailDelivery: includes
-    Supplier ||--o{ Delivery: provides
-```
-
-### Tech Stack
-- **Frontend**: React 18+, TypeScript, Tailwind CSS, Vite
-- **Backend**: Express.js, TypeScript, OpenAPI/Swagger
-- **DevOps**: Docker
-
-## 🎯 Hands-On Scenarios
-
-## TENTANTIVE AGENDA - SUBJECT TO CHANGE - REPO WILL BE MOVED TO NEW ORG ONCE COMPLETED ##
+## 💻 Hands-On Scenarios
 
 1. **GUIDED HANDS-ON: Create Custom Instructions and a Custom Prompt File**
    This activity will be performed together as a group.
@@ -105,6 +85,30 @@ erDiagram
    - Improve coverage based on analysis
    - BONUS: Ask GitHub Copilot to execute the tests using the Playwright MCP server.
 
+---
+
+## 🏗️ Architecture
+
+The application is built using modern TypeScript with a clean separation of concerns:
+
+```mermaid
+erDiagram
+    Headquarters ||--o{ Branch: has
+    Branch ||--o{ Order: placed_at
+    Order ||--o{ OrderDetail: contains
+    OrderDetail ||--o{ OrderDetailDelivery: fulfilled_by
+    OrderDetail }|--|| Product: references
+    Delivery ||--o{ OrderDetailDelivery: includes
+    Supplier ||--o{ Delivery: provides
+```
+
+### Tech Stack
+- **Frontend**: React 18+, TypeScript, Tailwind CSS, Vite
+- **Backend**: Express.js, TypeScript, OpenAPI/Swagger
+- **DevOps**: Docker
+
+---
+
 ## 🚀 Getting Started
 
 1. Clone this repository
@@ -130,7 +134,7 @@ Use VS Code command palette:
 ## 📚 Documentation
 
 - [Detailed Architecture](./docs/architecture.md)
-- [Complete Demo Script](./docs/demo-script.md)
+- [Build Instructions](./docs/build.md)
 
 ---
 
