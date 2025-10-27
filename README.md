@@ -62,6 +62,8 @@ This isn't just another demo app - it's a carefully crafted showcase that demons
 ### 🛑 If you were unable to complete steps 1 & 2, please merge `Phase_1` branch into `main` to proceed 🛑 ###
 ---
 3. **Requirements Specifications and Agentic Implementation**
+   - Have GitHub Copilot build and deploy the existing implementation of the Supply Chain store.
+      - Sample Prompt: `Please build and run my project so that I can see its existing state`  
    - Use previously developed `custom chat mode` to define features and create an implementation plan
       - Use the /docs/design/MonaFigurine.png file (found in ./docs/design) to create a new product offering on the website.
           - Sample Prompt: `Using the design in the ./docs/design/MonaFigurine.png file, create an a new product offering to the OctoCAT Supply website.  Price is $32.99, SKU is MONA-001, and description is "A beautiful handcrafted figurine inspired by the Mona Lisa."`
