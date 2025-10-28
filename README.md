@@ -22,9 +22,13 @@ This isn't just another demo app - it's a carefully crafted showcase that demons
 
 1. **GUIDED HANDS-ON: Create Custom Instructions and a Custom Prompt File**
    This activity will be performed together as a group.
-   - Use GitHub Copilot Ask Mode and Agent to ask Copilot about the API of the project or any other question about your repo and run the project to see it live.  
+   - Use GitHub Copilot Ask Mode and Agent to ask Copilot about the API of the project or any other question about your repo and run the project to see it live.
+      - Sample Prompt: `Please build and run my project so that I can see its existing state` 
       - Sample Prompt: `Please give me details about the API of this project and deploy it so I can see it live.`
       - Sample Prompt: `Are there any core features missing in my project?`
+   - Use Agent mode to have GitHub Copilot build and deploy the existing implementation of the Supply Chain store.
+      - Sample Prompt: `Please build and run my project so that I can see its existing state.`
+         - Review the existing store. 
    - Use GitHub Copilot to update or create the custom instructions for the OctoCAT Supply project.
       - Use the `Gear` icon in the GitHub Copilot Chat window to select the `Generate Agent Instructions`  prompt. 
          - Create a generic (project wide) GitHub Copilot Instructions file.
@@ -41,9 +45,7 @@ This isn't just another demo app - it's a carefully crafted showcase that demons
    - Review the Copilot Custom Agent (Chat Mode) in the `.github/chatmodes`.
    - Create a Custom Agent (Chat Mode) for the OctoCAT Supply project if you would like. 
 ---
-3. **Requirements Specifications and Agentic Implementation**
-   - Have GitHub Copilot build and deploy the existing implementation of the Supply Chain store.
-      - Sample Prompt: `Please build and run my project so that I can see its existing state`  
+3. **Requirements Specifications and Agentic Implementation** 
    - Use previously reviewed `custom chat mode` to define features and create an implementation plan
       - Use the /docs/design/MonaFigurine.png file (found in ./docs/design) to create a new product offering on the website.
           - Sample Prompt: `Using the design in the ./docs/design/MonaFigurine.png file, create an a new product offering to the OctoCAT Supply website.  Price is $32.99, SKU is MONA-001, and description is "A beautiful handcrafted figurine inspired by the Mona Lisa."`
