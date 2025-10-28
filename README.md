@@ -47,7 +47,7 @@ This isn't just another demo app - it's a carefully crafted showcase that demons
 3. **Requirements Specifications and Agentic Implementation** 
    - Use previously reviewed `custom chat mode` to define features and create an implementation plan
       - Use the /docs/design/MonaFigurine.png file (found in ./docs/design) to create a new product offering on the website.
-          - Sample Prompt: `Using the design in the ./docs/design/MonaFigurine.png file, create an a new product offering to the OctoCAT Supply website.  Price is $32.99, SKU is MONA-001, and description is "A beautiful handcrafted figurine inspired by the Mona Lisa."`
+          - Sample Prompt: `Using the image #file:MonaFigurine.png file, create an a new product offering to the OctoCAT Supply website.  Price is $32.99, SKU is MONA-001, and description is "A beautiful handcrafted figurine inspired by the Mona Lisa."`
       - Generate UI components from design mockups (using Copilot Vision) and Generated Implementation Plan.
       - Review the Pull Request in your Repo that was created by Copilot Agent Mode and merge the one you like best.
    - Use GitHub Copilot Agent mode to the Create Cart Page and Cart Icon.
