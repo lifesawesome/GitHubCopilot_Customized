@@ -1,7 +1,7 @@
 ---
 name: Test Coverage Agent
 description: Analyze test coverage gaps and generate comprehensive Vitest test files for API routes and React components
-tools: ['search', 'codebase', 'usages', 'runCommands', 'editFiles', 'findTestFiles', 'testFailure']
+tools: ['search', 'search/codebase', 'search/usages', 'runCommands', 'edit/editFiles', 'execute/testFailure']
 model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: "Unit Test Coverage"

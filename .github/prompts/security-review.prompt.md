@@ -1,7 +1,7 @@
 ---
 name: 'security-review'
 description: 'Analyze code for security vulnerabilities including XSS, injection, CORS, and auth issues'
-mode: 'ask'
+agent: 'ask'
 ---
 
 # Security Review

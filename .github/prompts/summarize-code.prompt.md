@@ -1,7 +1,7 @@
 ---
 name: 'summarize-code'
 description: 'Provide a concise 3-6 bullet summary of code purpose, inputs/outputs, and architecture fit'
-mode: 'ask'
+agent: 'ask'
 ---
 
 # Summarize Code

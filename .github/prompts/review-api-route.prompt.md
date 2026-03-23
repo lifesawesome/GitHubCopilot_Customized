@@ -1,7 +1,7 @@
 ---
 name: 'review-api-route'
 description: 'Review an Express API route file for correctness, security, Swagger docs, and best practices'
-mode: 'ask'
+agent: 'ask'
 ---
 
 # Review API Route

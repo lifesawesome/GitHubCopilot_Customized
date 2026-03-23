@@ -1,5 +1,5 @@
 ---
-tools: ['search', 'github/*', 'playwright/*', 'githubRepo', 'todos']
+tools: [read/readFile, search, atlassian/atlassian-mcp-server/search, 'github/*', 'playwright/*']
 description: Explore implementation ideas
 model: Claude Sonnet 4.5
 ---

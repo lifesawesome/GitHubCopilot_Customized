@@ -1,7 +1,7 @@
 ---
 name: 'add-tao-observability'
 description: 'Add TAO observability instrumentation (tracing, metrics, logging) to Express routes'
-mode: 'agent'
+agent: 'agent'
 ---
 
 # Add TAO Observability

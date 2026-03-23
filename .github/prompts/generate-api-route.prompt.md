@@ -1,7 +1,7 @@
 ---
 name: 'generate-api-route'
 description: 'Scaffold a new Express API route with CRUD operations, Swagger docs, and tests'
-mode: 'agent'
+agent: 'agent'
 ---
 
 # Generate New API Route

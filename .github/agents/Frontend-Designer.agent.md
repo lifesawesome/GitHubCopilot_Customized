@@ -1,7 +1,6 @@
 ---
 name: Frontend Designer  
-description: Design and implement React components with Tailwind CSS following OctoCAT brand guidelines
-tools: ['search', 'codebase', 'usages', 'editFiles']
+description: Design and implement React components with Tailwind CSS following OctoCAT brand guidelines]
 model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: "Refactor Component"

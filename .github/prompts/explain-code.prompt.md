@@ -1,7 +1,7 @@
 ---
 name: 'explain-code'
 description: 'Explain TypeScript/React code with architecture context, dependencies, and improvement suggestions'
-mode: 'ask'
+agent: 'ask'
 ---
 
 # Explain Code
