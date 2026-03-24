@@ -23,21 +23,21 @@
 
 ## Exercise 1: Explore the Codebase (Ask Mode)
 
-**Goal**: Use Ask mode with `@workspace` to understand the project.
+**Goal**: Use Ask mode to understand the project (codebase context is now built in automatically).
 
 1. Open Copilot Chat and select **Ask** mode
 2. Try these prompts:
 
 ```
-@workspace What is this project about? Summarize the architecture.
+What is this project about? Summarize the architecture.
 ```
 
 ```
-@workspace How many API routes exist and what entities do they serve?
+How many API routes exist and what entities do they serve?
 ```
 
 ```
-@workspace What is the ERD relationship between Orders, OrderDetails, and Products?
+What is the ERD relationship between Orders, OrderDetails, and Products?
 ```
 
 <details>
@@ -66,7 +66,7 @@
 4. Now open `frontend/src/components/Welcome.tsx` and ask:
 
 ```
-@workspace Explain how the Welcome component works, including the brand carousel.
+Explain how the Welcome component works, including the brand carousel.
 ```
 
 <details>
@@ -195,6 +195,6 @@ In this lesson you practiced:
 - ✅ **Agent mode** for multi-file test generation
 - ✅ **Inline chat** for quick in-editor changes
 - ✅ **Slash commands** (`/explain`, `/doc`)
-- ✅ **Chat participants** (`@workspace`)
+- ✅ **Chat participants** (`@terminal`, `@github`, `@vscode`)
 
 **Next**: [Lesson 2 — Customization & Planning](../02-planning/readme.md)

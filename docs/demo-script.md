@@ -226,7 +226,7 @@ You can also use the Command Palette to start the MCP servers.
 - **Why:** Demonstrate that Copilot can be used to scale AppSec by bringing security expertise to Developers directly.
 - **How:**  
   1. Open Copilot Chat and switch to `Ask` mode.
-  1. Ask Copilot to `analyze @workspace and check if there are obvious security vulnerabilities`
+  1. Ask Copilot to `analyze the codebase and check if there are obvious security vulnerabilities`
   1. You should see issues like:
     - Cross-site Scripting (XSS) vulnerability
     - Command Injection Vulnerability

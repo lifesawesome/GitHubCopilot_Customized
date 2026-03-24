@@ -87,7 +87,7 @@ Chat participants provide scoped context to Copilot:
 
 | Participant | Purpose | Example |
 |-------------|---------|---------|
-| `@workspace` | Entire codebase context | `@workspace how is the API structured?` |
+| *(built-in)* | Entire codebase context is included automatically | `How is the API structured?` |
 | `@terminal` | Terminal output context | `@terminal explain the last error` |
 | `@vscode` | VS Code settings/features | `@vscode how do I configure launch.json?` |
 | `@github` | GitHub repo context | `@github what open issues exist?` |

@@ -21,6 +21,7 @@ const About = () => {
             enrichment while delighting their human companions with valuable insights.
           </p>
           <h2 className="text-2xl font-bold text-primary">Our Purr-pose</h2>
+        
           <p>
             At OctoCAT Supply, we believe that cats deserve the same technological innovations
             that humans enjoy. Our team of feline behavior specialists, engineers, and AI experts

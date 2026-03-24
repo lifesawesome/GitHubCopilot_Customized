@@ -39,29 +39,44 @@
 
 ## Exercise 2: See Instructions in Action
 
-**Goal**: Observe how file-specific instructions change Copilot's behavior.
+**Goal**: Observe each customization type producing real output from this codebase.
 
-1. Open `api/src/routes/supplier.ts`
-2. Open Copilot Chat in **Edit** mode
-3. Select any endpoint and ask:
-   ```
-   Add proper error handling to this endpoint
-   ```
-4. Notice how Copilot follows the API route patterns (proper status codes, error shape)
+### 1. Instructions file — `api-routes.instructions.md`
 
-5. Now open `frontend/src/components/About.tsx`
-6. Select a section and ask:
-   ```
-   Improve the styling of this section
-   ```
-7. Notice how Copilot uses Tailwind classes and dark mode — not inline styles
+Open `api/src/routes/supplier.ts`, then in **Edit** mode ask:
+```
+Add a route to search suppliers by name
+```
+Copilot automatically adds a Swagger JSDoc block, returns `{ error: 'Supplier not found' }` (not a plain string), and uses status 404 — because `.github/instructions/api-routes.instructions.md` applies to every file matching `api/src/routes/**/*.ts`.
+
+### 2. Global instructions — `copilot-instructions.md` + TAO
+
+In **Agent** mode ask:
+```
+Add observability to #file:api/src/routes/supplier.ts using our internal standards
+```
+Copilot uses `@Measure`, `@Trace`, and `@Log` from the TAO framework — even though TAO isn't a public package. It learned this from `.github/copilot-instructions.md` which references `docs/tao.md`.
+
+### 3. Prompt file — `add-error-handling.prompt.md`
+
+Open `api/src/routes/order.ts`, then run your prompt via **Command Palette → Prompts: Run Prompt → add-error-handling**.
+Copilot wraps every handler in try/catch with 404/400/500 responses — exactly the shape defined in the prompt — without you repeating those rules each time.
+
+### 4. Agent — Documentation Writer
+
+Open the agent picker (model selector at the bottom of Chat), select **Documentation Writer**, then ask:
+```
+Which routes in #file:api/src/routes/supplier.ts are missing Swagger documentation?
+```
+The agent reads the file and reports gaps using its specialised documentation persona, rather than giving a generic Copilot response.
 
 <details>
 <summary>✅ Success Criteria</summary>
 
-- API route gets proper 404/400 handling with `{ error: string }` shape
-- React component uses Tailwind utilities with `dark:` prefixes
-- No inline styles in the React output
+- Search route has Swagger JSDoc and `{ error: string }` shape — not a plain `res.send()`
+- TAO decorators (`@Measure`, `@Trace`, `@Log`) appear in the observability output
+- `add-error-handling` prompt wraps handlers in try/catch with consistent error shapes
+- Documentation Writer identifies missing Swagger blocks by name
 
 </details>
 
@@ -153,15 +168,16 @@ You are a technical documentation specialist for the OctoCAT Supply Chain projec
 ```
 
 3. Test your agent:
-   - Open Copilot Chat and type `@Documentation Writer`
-   - Ask: "What API endpoints are missing Swagger documentation?"
+   - Open the agent picker (model selector at the bottom of the Chat panel)
+   - Select **Documentation Writer** from the list
+   - Ask: "What API endpoints in #file:api/src/routes/supplier.ts are missing Swagger documentation?"
 
 <details>
 <summary>✅ Success Criteria</summary>
 
 - Agent file created with valid YAML frontmatter
-- Agent responds with its specialized persona
-- Identifies undocumented endpoints correctly
+- Agent appears in the agent picker and responds with its specialized persona
+- Identifies undocumented endpoints by reading route files via `#file:` references
 
 </details>
 
@@ -191,15 +207,21 @@ Include a filter to show orders by status (pending, processing, shipped, deliver
 Simplify the plan — just show a table of orders with status filter, no grouping by branch
 ```
 
-5. **Do NOT implement** — just review the plan
+5. Ask another follow-up to anchor the plan to existing code:
+```
+Use #file:frontend/src/components/entity/product/Products.tsx as the template pattern for this new page
+```
+
+6. **Do NOT implement** — just review the plan
 
 <details>
 <summary>✅ Success Criteria</summary>
 
 - Plan identifies the correct files to create and modify
-- References existing patterns (Products page as template)
+- References the Products component as a concrete template (not generic)
 - Uses Tailwind CSS and dark mode in the proposal
 - Simplified plan is less complex than the original
+- Third prompt produces a plan that mirrors the Products page structure
 
 </details>
 
