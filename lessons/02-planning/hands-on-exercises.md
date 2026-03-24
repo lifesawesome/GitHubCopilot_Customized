@@ -62,7 +62,23 @@ Copilot uses `@Measure`, `@Trace`, and `@Log` from the TAO framework — even th
 Open `api/src/routes/order.ts`, then run your prompt via **Command Palette → Prompts: Run Prompt → add-error-handling**.
 Copilot wraps every handler in try/catch with 404/400/500 responses — exactly the shape defined in the prompt — without you repeating those rules each time.
 
-### 4. Agent — Documentation Writer
+### 4. React instructions — `react.instructions.md`
+
+Open `frontend/src/components/entity/product/Products.tsx`, then in **Edit** mode ask:
+```
+Add a SupplierCard component that displays supplier name, contact person, and email
+```
+Copilot generates a functional component with a TypeScript props interface, uses only Tailwind utility classes (no inline styles), and includes `dark:` prefixes for dark mode support — because `.github/instructions/react.instructions.md` applies to every `**/*.tsx` file.
+
+### 5. Testing instructions — `testing.instructions.md`
+
+In **Agent** mode ask:
+```
+Create tests for #file:api/src/routes/supplier.ts
+```
+Copilot generates a `supplier.test.ts` file using Vitest + Supertest, with a fresh Express app in `beforeEach`, calls `resetSuppliers()` for test isolation, and covers all CRUD operations plus 404 error scenarios — following the pattern from `branch.test.ts` as defined in `.github/instructions/testing.instructions.md`.
+
+### 6. Agent — Documentation Writer
 
 Open the agent picker (model selector at the bottom of Chat), select **Documentation Writer**, then ask:
 ```
@@ -76,6 +92,8 @@ The agent reads the file and reports gaps using its specialised documentation pe
 - Search route has Swagger JSDoc and `{ error: string }` shape — not a plain `res.send()`
 - TAO decorators (`@Measure`, `@Trace`, `@Log`) appear in the observability output
 - `add-error-handling` prompt wraps handlers in try/catch with consistent error shapes
+- SupplierCard uses a TypeScript props interface, Tailwind classes only, and `dark:` prefixes
+- Supplier tests use Vitest + Supertest with `beforeEach` app setup and `resetSuppliers()`
 - Documentation Writer identifies missing Swagger blocks by name
 
 </details>
