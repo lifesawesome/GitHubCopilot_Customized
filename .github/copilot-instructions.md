@@ -82,20 +82,6 @@ Swagger UI is served at `/api-docs`.
 
 ---
 
-## File-Specific Instructions
-
-Detailed conventions are in `.github/instructions/` and auto-apply by file pattern:
-
-| File Pattern | Instruction File | Key Points |
-|---|---|---|
-| `**/*.ts` | [typescript.instructions.md](instructions/typescript.instructions.md) | Strict mode, no `any`, naming conventions |
-| `**/*.tsx` | [react.instructions.md](instructions/react.instructions.md) | Functional components, Tailwind only, dark mode via `dark:` |
-| `api/src/routes/**/*.ts` | [api-routes.instructions.md](instructions/api-routes.instructions.md) | Swagger JSDoc required, Express Router, seed data pattern |
-| `**/*.test.ts` | [testing.instructions.md](instructions/testing.instructions.md) | Vitest + Supertest, follow `branch.test.ts` pattern |
-| `**/*.json` | [project.instructions.md](instructions/project.instructions.md) | npm workspaces, always use `--workspace=` flag |
-
----
-
 ## Critical Conventions
 
 ### API Routes
