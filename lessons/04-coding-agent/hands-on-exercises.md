@@ -215,4 +215,4 @@ In this lesson you:
 - ✅ Iterated with follow-up tasks
 - ✅ Observed how custom instructions influence agent output
 
-**Next**: [Lesson 5 — MCP Servers & Extensions](../05-mcp-and-extensions/readme.md)
+**Next**: [Lesson 5 — Spec Kit Development](../05-spec-kit-development/readme.md)
