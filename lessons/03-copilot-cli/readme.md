@@ -6,95 +6,126 @@
 |--------|--------|
 | **Duration** | 60 minutes (40 min instruction + 20 min hands-on) |
 | **Level** | Intermediate |
-| **Prerequisites** | GitHub CLI installed (`gh --version`), Copilot license |
-| **Outcome** | Use `gh copilot` for terminal-based AI assistance |
+| **Prerequisites** | Copilot license, terminal access |
+| **Outcome** | Use the standalone `copilot` CLI for terminal-based AI assistance |
 
 ---
 
 ## Why This Matters
 
-Not everything happens in VS Code. When you're in the terminal — deploying, debugging, scripting, or managing git — Copilot CLI brings AI assistance directly to your command line without switching context.
+Not everything happens in VS Code. When you're in the terminal — deploying, debugging, scripting, or managing git — Copilot CLI brings an **agentic AI assistant** directly to your command line. It can read files, run shell commands, search code, create PRs, and even work autonomously — all without switching context.
 
 ---
 
 ## Installation
 
-### 1. Install GitHub CLI
+### 1. Install Copilot CLI
 
 ```powershell
 # Windows (winget)
-winget install GitHub.cli
+winget install GitHub.copilot-cli
 
 # macOS (Homebrew)
-brew install gh
+brew install gh-copilot
 
-# Linux
-sudo apt install gh
+# Or update an existing installation
+copilot update
 ```
 
 ### 2. Authenticate
 
 ```powershell
-gh auth login
+copilot login
 ```
 
-### 3. Install the Copilot Extension
+### 3. Verify
 
 ```powershell
-gh extension install github/gh-copilot
-```
-
-### 4. Verify
-
-```powershell
-gh copilot --version
+copilot version
 ```
 
 ---
 
-## Two Main Commands
+## Core Concepts
 
-### `gh copilot suggest` — Get Command Suggestions
+### The Interactive Interface
 
-Ask for a shell command in natural language:
-
-```powershell
-gh copilot suggest "list all TypeScript files in the api directory"
-```
-
-Copilot returns the command and asks if you want to run it:
-```
-Command: Get-ChildItem -Path api -Recurse -Filter *.ts | Select-Object FullName
-
-? Run this command? (Y/n)
-```
-
-### `gh copilot explain` — Understand Commands
-
-Ask Copilot to explain a command:
+Launch the interactive TUI with a single command:
 
 ```powershell
-gh copilot explain "npm run build --workspace=api"
+copilot
 ```
 
-Copilot provides a plain-language explanation of what the command does.
+This opens a rich terminal UI where you chat with Copilot, ask questions, and let it execute tasks. You can also run a one-shot prompt:
+
+```powershell
+copilot -p "list all TypeScript files in the api directory"
+```
+
+### Three Modes
+
+Toggle between modes with **Shift+Tab**:
+
+| Mode | Behavior |
+|------|----------|
+| **Standard** | Copilot asks for confirmation before running commands or editing files |
+| **Plan** | Copilot creates an implementation plan before making changes |
+| **Autopilot** | Copilot works autonomously, executing tools without confirmation |
+
+### File References with `@`
+
+Reference files directly in your prompts:
+
+```
+@ api/src/routes/branch.ts explain this route handler
+```
+
+### Shell Escape with `!`
+
+Run shell commands directly without leaving Copilot:
+
+```
+! npm test --workspace=api
+```
 
 ---
 
-## Interactive Mode
+## Slash Commands
 
-Start an interactive session for multiple questions:
+Slash commands control the CLI from within the interactive interface:
 
-```powershell
-gh copilot suggest
-```
+| Command | Purpose |
+|---------|---------|
+| `/plan [PROMPT]` | Create an implementation plan before coding |
+| `/delegate [PROMPT]` | Delegate changes to a remote repo via AI-generated PR |
+| `/fleet [PROMPT]` | Run parts of a task in parallel via subagents |
+| `/review [PROMPT]` | Run the code review agent to analyze changes |
+| `/diff` | Review changes made in the current directory |
+| `/model [MODEL]` | Select the AI model to use |
+| `/agent` | Browse and select from available agents |
+| `/mcp [show\|add\|edit\|delete]` | Manage MCP server configuration |
+| `/context` | Show context window token usage |
+| `/compact` | Summarize conversation to reduce token usage |
+| `/session` | Show session info and workspace summary |
+| `/share [file\|gist]` | Share session to a Markdown file or GitHub gist |
+| `/clear` | Clear conversation history |
+| `/exit` | Exit the CLI |
 
-Then type queries conversationally:
-```
-> how do I run only the API tests?
-> how do I check test coverage?
-> how do I build the frontend for production?
-```
+For a full list, type `/help` in the interactive interface.
+
+---
+
+## Keyboard Shortcuts
+
+| Shortcut | Purpose |
+|----------|---------|
+| **Shift+Tab** | Cycle between standard, plan, and autopilot mode |
+| **Ctrl+C** | Cancel operation / clear input (press twice to exit) |
+| **Ctrl+D** | Shutdown |
+| **Ctrl+L** | Clear the screen |
+| **Ctrl+O** | Expand recent items in response timeline |
+| **Ctrl+T** | Expand/collapse reasoning in responses |
+| **Esc** | Cancel current operation |
 
 ---
 
@@ -103,75 +134,119 @@ Then type queries conversationally:
 ### Project Setup
 
 ```powershell
-gh copilot suggest "clone the repo and install dependencies for a Node.js monorepo"
+copilot -p "install dependencies for this npm monorepo and build the API"
 ```
 
 ### Build & Test
 
 ```powershell
-gh copilot suggest "run tests only in the api workspace with coverage"
+copilot -i "run tests only in the api workspace with coverage"
 ```
 
 ```powershell
-gh copilot suggest "build both api and frontend workspaces in parallel"
+copilot -p "build both api and frontend workspaces"
 ```
 
 ### Git Operations
 
 ```powershell
-gh copilot suggest "create a new branch called feature/add-cart and push it"
+copilot -i "create a new branch called feature/add-cart and push it"
 ```
 
+### Autonomous Mode
+
 ```powershell
-gh copilot suggest "show the diff of only TypeScript files in the last commit"
+copilot --autopilot -p "find and fix all TypeScript compiler errors in the api workspace"
 ```
 
-### Docker
+### Plan Mode
 
-```powershell
-gh copilot suggest "build a docker image for the api project and tag it as octocat-api:latest"
+Inside the interactive interface:
+
+```
+/plan add vitest tests for the order route covering all CRUD endpoints and error paths
 ```
 
-### Debugging
+### Code Review
 
-```powershell
-gh copilot explain "npm ERR! ERESOLVE unable to resolve dependency tree"
+```
+/review check for missing Swagger docs in all route files
 ```
 
-```powershell
-gh copilot suggest "find which process is using port 3000 and kill it"
+### Parallel Execution
+
+```
+/fleet run linting on frontend and API tests simultaneously
 ```
 
 ---
 
-## File References
+## Command-Line Options
 
-You can reference files in your prompts with `@`:
-
-```powershell
-gh copilot suggest "create a docker-compose file based on @api/Dockerfile"
-```
+| Option | Purpose |
+|--------|---------|
+| `-p PROMPT` | Execute a prompt programmatically (exits after completion) |
+| `-i PROMPT` | Start interactive session and auto-execute prompt |
+| `--autopilot` | Enable autonomous mode (no confirmation prompts) |
+| `--model MODEL` | Set the AI model |
+| `--agent AGENT` | Use a custom agent |
+| `--allow-tool TOOL` | Pre-approve specific tools |
+| `--allow-all` | Enable all permissions (tools, paths, URLs) |
+| `-s, --silent` | Output only agent response (useful for scripting) |
+| `--resume SESSION-ID` | Resume a previous session |
+| `--continue` | Resume the most recent session |
+| `--share PATH` | Save session to Markdown after completion |
 
 ---
 
-## Shell Integration
+## Tool Permissions
 
-Use `!` to pipe shell output into Copilot:
+Copilot CLI has a granular permission system. Control which tools the agent can use:
 
 ```powershell
-# Run a command and ask Copilot about the output
-npm test --workspace=api 2>&1 | gh copilot explain "why did this test fail?"
+# Allow all git commands except git push
+copilot --allow-tool='shell(git:*)' --deny-tool='shell(git push)'
+
+# Allow a specific MCP server tool
+copilot --allow-tool='MyMCP(create_issue)'
 ```
+
+Permission patterns: `shell(command)`, `write(path)`, `read(path)`, `url(domain)`, `memory`.
+
+---
+
+## Environment Variables
+
+| Variable | Purpose |
+|----------|---------|
+| `COPILOT_MODEL` | Set the AI model |
+| `COPILOT_ALLOW_ALL` | Set `true` to allow all permissions |
+| `COPILOT_HOME` | Override config directory (default: `~/.copilot`) |
+| `COPILOT_GITHUB_TOKEN` | Authentication token |
+
+---
+
+## Configuration
+
+Settings cascade: **User** → **Repository** → **Local** (most specific wins).
+
+| Scope | Location |
+|-------|----------|
+| User | `~/.copilot/config.json` |
+| Repository | `.github/copilot/settings.json` (committed) |
+| Local | `.github/copilot/settings.local.json` (gitignored) |
 
 ---
 
 ## Tips
 
-1. **Be specific** — "run API tests" is better than "run tests"
-2. **Mention your OS** — helps get the right shell syntax
-3. **Use suggest for doing, explain for learning**
-4. **Review before running** — always verify suggested commands
-5. **Start interactive session** for related multi-step tasks
+1. **Be specific** — "run API tests with vitest" is better than "run tests"
+2. **Use Plan mode** for complex multi-step changes
+3. **Use Autopilot mode** for repetitive tasks you trust
+4. **Review with `/diff`** after Copilot makes changes
+5. **Use `/context`** to monitor token usage in long sessions
+6. **Use `--resume`** to continue previous sessions
+7. **Use `/fleet`** to parallelize independent tasks
 
 ---
 
@@ -179,11 +254,14 @@ npm test --workspace=api 2>&1 | gh copilot explain "why did this test fail?"
 
 | Task | Command |
 |------|---------|
-| Get a command suggestion | `gh copilot suggest "..."` |
-| Explain a command | `gh copilot explain "..."` |
-| Interactive mode | `gh copilot suggest` (no args) |
-| Version check | `gh copilot --version` |
-| Update extension | `gh extension upgrade gh-copilot` |
+| Launch interactive UI | `copilot` |
+| Run a one-shot prompt | `copilot -p "..."` |
+| Interactive with prompt | `copilot -i "..."` |
+| Autonomous mode | `copilot --autopilot -p "..."` |
+| Version check | `copilot version` |
+| Update CLI | `copilot update` |
+| Login | `copilot login` |
+| Get help | `copilot help` |
 
 ---
 

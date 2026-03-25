@@ -2,13 +2,14 @@
 
 ## Exercise Overview
 
-| # | Exercise | Command | Duration |
+| # | Exercise | Feature | Duration |
 |---|----------|---------|----------|
-| 1 | Get Oriented | suggest | 5 min |
-| 2 | Build & Test Workflows | suggest | 5 min |
-| 3 | Explain Complex Commands | explain | 5 min |
-| 4 | Git Automation | suggest | 5 min |
-| 5 | Debugging with CLI | explain | 5 min |
+| 1 | Get Oriented | Interactive prompts, `@` file refs | 5 min |
+| 2 | Build & Test Workflows | `-p` prompt mode | 5 min |
+| 3 | Plan Mode | `/plan` slash command | 5 min |
+| 4 | Git & PR Automation | `/delegate`, `/diff` | 5 min |
+| 5 | Autopilot & Parallel | `--autopilot`, `/fleet` | 5 min |
+| 6 | Review & Sessions | `/review`, `/share` | 5 min |
 
 ---
 
@@ -18,35 +19,66 @@
 2. Navigate to the `GitHubCopilot_Customized` directory
 3. Verify Copilot CLI is installed:
    ```powershell
-   gh copilot --version
+   copilot version
+   ```
+4. Login if needed:
+   ```powershell
+   copilot login
    ```
 
 ---
 
 ## Exercise 1: Get Oriented
 
-**Goal**: Use Copilot CLI to explore the project structure.
+**Goal**: Launch the interactive interface and explore the project.
 
-Try these commands:
+1. Start the interactive UI:
 
 ```powershell
-gh copilot suggest "count how many TypeScript files are in the api/src directory"
+copilot
 ```
 
-```powershell
-gh copilot suggest "list all Express route files in this project"
+2. Try these prompts in the interactive interface:
+
+```
+count how many TypeScript files are in the api/src directory
 ```
 
-```powershell
-gh copilot suggest "show the npm workspaces in package.json"
+```
+list all Express route files in this project
+```
+
+3. Reference a file directly with `@`:
+
+```
+@ package.json what workspaces are defined in this monorepo?
+```
+
+4. Run a shell command without leaving Copilot:
+
+```
+! tree api/src /F
+```
+
+5. Check your token usage:
+
+```
+/context
+```
+
+6. Exit when done:
+
+```
+/exit
 ```
 
 <details>
 <summary>✅ Success Criteria</summary>
 
-- Copilot suggests valid shell commands
-- Commands produce correct output when run
-- You discover the project has ~8 route files, 8 model files
+- Interactive UI launches and accepts prompts
+- Copilot reads files and executes commands to answer questions
+- `@` file reference provides context from the actual file
+- `/context` shows token usage breakdown
 
 </details>
 
@@ -54,128 +86,236 @@ gh copilot suggest "show the npm workspaces in package.json"
 
 ## Exercise 2: Build & Test Workflows
 
-**Goal**: Use Copilot to find the right build and test commands.
+**Goal**: Use prompt mode (`-p`) for one-shot build and test commands.
 
 ```powershell
-gh copilot suggest "install dependencies for this npm monorepo"
+copilot -p "install dependencies for this npm monorepo"
 ```
 
 ```powershell
-gh copilot suggest "run only the API tests using vitest"
+copilot -p "run only the API tests using vitest"
 ```
 
 ```powershell
-gh copilot suggest "run tests with coverage for the api workspace"
+copilot -p "run tests with coverage for the api workspace"
 ```
 
 ```powershell
-gh copilot suggest "start both api and frontend dev servers concurrently"
+copilot -p "explain what the build script in api/package.json does"
+```
+
+Try interactive mode with an initial prompt:
+
+```powershell
+copilot -i "start both api and frontend dev servers concurrently"
 ```
 
 <details>
 <summary>✅ Success Criteria</summary>
 
+- `-p` mode executes and exits automatically
+- `-i` mode starts interactive session after executing the prompt
 - Copilot correctly uses `--workspace=api` flag
-- Test commands reference vitest configuration
 - Build commands work for the monorepo structure
 
 </details>
 
 ---
 
-## Exercise 3: Explain Complex Commands
+## Exercise 3: Plan Mode
 
-**Goal**: Use `explain` to understand project commands.
+**Goal**: Use `/plan` to create implementation plans before making changes.
 
-1. Look at the scripts in `package.json` and pick one:
+1. Launch the interactive interface:
 
 ```powershell
-gh copilot explain "npm run build --workspace=api && npm run build --workspace=frontend"
+copilot
 ```
 
-2. Explain a Docker command:
+2. Switch to plan mode:
 
-```powershell
-gh copilot explain "docker build -t octocat-api:latest -f api/Dockerfile ."
+Press **Shift+Tab** until you see "plan" mode, or use:
+
+```
+/plan add a new GET endpoint to the supplier route that returns suppliers filtered by name
 ```
 
-3. Explain a Git command:
+3. Review the plan Copilot creates — it should outline:
+   - Files to modify
+   - Code changes needed
+   - Test updates
 
-```powershell
-gh copilot explain "git log --oneline --graph --all --decorate"
+4. Try another plan:
+
+```
+/plan add Swagger documentation to the delivery route file
+```
+
+5. If you approve the plan, let Copilot execute it. Otherwise, clear and try something else:
+
+```
+/clear
 ```
 
 <details>
 <summary>✅ Success Criteria</summary>
 
-- Copilot breaks down each part of the command
-- Explanations are clear and accurate
-- You learn something new about the commands
+- Copilot creates a structured plan before coding
+- Plan identifies the correct files to modify
+- You can review before Copilot acts
+- `/clear` resets the conversation
 
 </details>
 
 ---
 
-## Exercise 4: Git Automation
+## Exercise 4: Git & PR Automation
 
-**Goal**: Use Copilot CLI for common git workflows.
+**Goal**: Use Copilot CLI for git workflows and code review.
+
+1. Launch interactive mode:
 
 ```powershell
-gh copilot suggest "show which files I've changed but not committed"
+copilot
 ```
 
-```powershell
-gh copilot suggest "create a feature branch called add-order-tests and switch to it"
+2. Check current changes:
+
+```
+/diff
 ```
 
-```powershell
-gh copilot suggest "see the commit history for just the api/src/routes directory"
+3. Ask git questions:
+
+```
+show which files I've changed but not committed
 ```
 
-```powershell
-gh copilot suggest "create a PR with the title 'Add order route tests'"
+```
+see the commit history for just the api/src/routes directory
+```
+
+4. Try the `/delegate` command (creates a PR from instructions):
+
+```
+/delegate create a feature branch and add JSDoc comments to api/src/routes/delivery.ts
+```
+
+5. Review changes before they're pushed:
+
+```
+/review check the last set of changes for any issues
 ```
 
 <details>
 <summary>✅ Success Criteria</summary>
 
-- Git commands are correct for your shell (PowerShell/bash)
-- PR creation uses `gh pr create` (GitHub CLI integration)
-- Branch commands work correctly
+- `/diff` displays a rich diff of changes
+- Git questions produce correct commands for your shell
+- `/delegate` creates a PR (if you confirm)
+- `/review` provides meaningful code review feedback
 
 </details>
 
 ---
 
-## Exercise 5: Debugging with CLI
+## Exercise 5: Autopilot & Parallel Execution
 
-**Goal**: Use Copilot to debug common development issues.
+**Goal**: Let Copilot work autonomously and run tasks in parallel.
 
-1. Simulate a problem — try running an incorrect command:
+1. Run a task in autopilot mode (no confirmation prompts):
 
 ```powershell
-# This will fail — then ask Copilot about it
-npm run test --workspace=nonexistent 2>&1 | Out-String | ForEach-Object { gh copilot explain $_ }
+copilot --autopilot -p "list all route files that are missing Swagger documentation"
 ```
 
-2. Ask about common errors:
+2. Use `--silent` for scripting-friendly output:
 
 ```powershell
-gh copilot explain "error TS2345: Argument of type 'string' is not assignable to parameter of type 'number'"
+copilot -s -p "count the total number of API endpoints across all route files"
 ```
 
-3. Find processes:
+3. Launch interactive and use `/fleet` for parallel execution:
 
 ```powershell
-gh copilot suggest "find what is running on port 3000 and how to stop it"
+copilot
+```
+
+```
+/fleet check all route files for missing error handling on DELETE endpoints
+```
+
+4. Control tool permissions:
+
+```powershell
+copilot --allow-tool='shell(npm:*)' --deny-tool='shell(rm:*)' -i "run the API test suite"
 ```
 
 <details>
 <summary>✅ Success Criteria</summary>
 
-- Copilot explains errors in plain language
-- Provides actionable fixes
-- Port investigation command works for your OS
+- `--autopilot` runs without asking for confirmation
+- `--silent` outputs only the agent response (no UI chrome)
+- `/fleet` spawns parallel subagents for independent tasks
+- Tool permission flags restrict what the agent can do
+
+</details>
+
+---
+
+## Exercise 6: Review, Sessions & Sharing
+
+**Goal**: Use code review, session management, and sharing features.
+
+1. Launch interactive mode:
+
+```powershell
+copilot
+```
+
+2. Run the code review agent:
+
+```
+/review analyze the api/src/routes directory for security issues and missing validation
+```
+
+3. Check session info:
+
+```
+/session
+```
+
+4. Browse available models:
+
+```
+/models
+```
+
+5. Compact the conversation if it gets long:
+
+```
+/compact
+```
+
+6. Share your session for documentation:
+
+```
+/share file ./my-session.md
+```
+
+7. Resume a previous session:
+
+```powershell
+copilot --continue
+```
+
+<details>
+<summary>✅ Success Criteria</summary>
+
+- `/review` provides actionable code review feedback
+- `/session` shows session summary and file access
+- `/share` exports the session to a readable Markdown file
+- `--continue` resumes the most recent session
 
 </details>
 
@@ -183,10 +323,32 @@ gh copilot suggest "find what is running on port 3000 and how to stop it"
 
 ## Bonus Challenge
 
-Create a multi-step automation:
+### Autonomous Multi-Step Task
+
+Use autopilot to complete a real task end-to-end:
 
 ```powershell
-gh copilot suggest "write a PowerShell script that: 1) installs dependencies, 2) builds the API, 3) runs tests, 4) reports pass/fail status"
+copilot --autopilot -p "Create a vitest test file for the product route at api/src/routes/product.test.ts. Follow the same pattern as branch.test.ts. Test all CRUD operations and error paths. Run the tests and fix any failures."
+```
+
+### Custom Agent with MCP
+
+Explore MCP server management:
+
+```powershell
+copilot
+```
+
+```
+/mcp show
+```
+
+### Hook into the Workflow
+
+Initialize Copilot customizations for the repo:
+
+```powershell
+copilot init
 ```
 
 ---
@@ -194,10 +356,14 @@ gh copilot suggest "write a PowerShell script that: 1) installs dependencies, 2)
 ## Summary
 
 In this lesson you practiced:
-- ✅ `gh copilot suggest` for command generation
-- ✅ `gh copilot explain` for command understanding
-- ✅ Build and test workflows for the monorepo
-- ✅ Git automation with GitHub CLI integration
+- ✅ Interactive TUI with `copilot` command
+- ✅ One-shot prompts with `-p` and interactive with `-i`
+- ✅ `/plan` for structured implementation planning
+- ✅ `/diff`, `/review`, `/delegate` for git and code review workflows
+- ✅ `--autopilot` for autonomous execution
+- ✅ `/fleet` for parallel task execution
+- ✅ Session management with `/session`, `/share`, `--continue`
+- ✅ Tool permissions with `--allow-tool` / `--deny-tool`
 - ✅ Debugging common development errors
 
 **Next**: [Lesson 4 — Coding Agent](../04-coding-agent/readme.md)
