@@ -8,7 +8,8 @@
 | 2 | See Instructions in Action | Observe behavior | 5 min |
 | 3 | Create a Custom Prompt | Write prompt file | 10 min |
 | 4 | Create a Custom Agent | Write agent file | 10 min |
-| 5 | Use Plan Mode | Plan a feature | 10 min |
+| 5 | Explore More Instruction Patterns | Global vs scoped | 10 min |
+| 6 | Use Plan Mode | Plan a feature | 10 min |
 
 ---
 
@@ -104,43 +105,67 @@ The agent reads the file and reports gaps using its specialised documentation pe
 
 **Goal**: Create your own reusable prompt file.
 
-1. Create a new file: `.github/prompts/add-error-handling.prompt.md`
-2. Add this content (customize as you like):
+> The `add-error-handling` prompt already exists at `.github/prompts/add-error-handling.prompt.md` as a reference example — open it first to study the pattern. Now you will create a **new** prompt that validates required fields.
+
+1. Open `.github/prompts/add-error-handling.prompt.md` and read the YAML frontmatter (name, description, mode) and the instruction structure
+2. Create a new file: `.github/prompts/add-input-validation.prompt.md`
+3. Add this content (customize as you like):
 
 ```markdown
 ---
-name: 'add-error-handling'
-description: 'Add comprehensive error handling to Express route endpoints'  
+name: 'add-input-validation'
+description: 'Add input validation to Express POST and PUT route handlers'
 mode: 'edit'
 ---
 
-# Add Error Handling
+# Add Input Validation
 
-Add proper error handling to the selected Express route endpoint(s):
+Add validation to POST and PUT handlers in the selected Express route file.
 
 ## Requirements
-1. Wrap handler logic in try/catch
-2. Return 404 with `{ error: "[Entity] not found" }` for missing resources
-3. Return 400 with `{ error: "field is required" }` for invalid input
-4. Return 500 with `{ error: "Internal server error" }` for unexpected errors
-5. Log errors with context: `console.error('Error in [method]:', error)`
+1. Check that all required fields (from the model interface) are present in `req.body`
+2. Return `400` with `{ error: "<fieldName> is required" }` for each missing field
+3. Validate that ID fields parsed from params are valid integers — return `400` with `{ error: "Invalid ID" }` if `NaN`
+4. Place validation BEFORE any business logic
 
-## Do NOT:
-- Change the existing business logic
-- Modify successful response shapes
-- Add unnecessary validation for optional fields
+## Example — Before
+```typescript
+router.post('/', (req, res) => {
+    const item = req.body;
+    items.push(item);
+    res.status(201).json(item);
+});
 ```
 
-3. Test your prompt:
+## Example — After
+```typescript
+router.post('/', (req, res) => {
+    const { name, price } = req.body;
+    if (!name) return res.status(400).json({ error: 'name is required' });
+    if (price === undefined) return res.status(400).json({ error: 'price is required' });
+    const newItem = { id: Math.max(...items.map(i => i.id)) + 1, name, price };
+    items.push(newItem);
+    res.status(201).json(newItem);
+});
+```
+
+## Do NOT
+- Modify successful response shapes
+- Add validation for optional model fields
+- Add try/catch (use the add-error-handling prompt for that)
+```
+
+4. Test your prompt:
    - Open `api/src/routes/order.ts`
-   - Run your prompt via Command Palette → "Prompts: Run Prompt"
+   - Run via Command Palette → **Prompts: Run Prompt → add-input-validation**
 
 <details>
 <summary>✅ Success Criteria</summary>
 
 - Prompt file created with valid YAML frontmatter
-- Running the prompt adds try/catch with proper status codes
-- Error responses match the specified format
+- Running the prompt adds field presence checks before business logic
+- Invalid ID params return 400, not 500
+- Error responses use `{ error: string }` JSON shape
 
 </details>
 
@@ -150,58 +175,134 @@ Add proper error handling to the selected Express route endpoint(s):
 
 **Goal**: Create a specialized agent persona.
 
-1. Create a new file: `.github/agents/Documentation-Writer.agent.md`
-2. Add this content:
+> The `Documentation Writer` agent already exists at `.github/agents/Documentation-Writer.agent.md` — open it first to study the YAML frontmatter (`name`, `description`, `tools`, `model`) and the structured workflow pattern. Now you will create a **new** agent with a different specialization.
+
+1. Open `.github/agents/Documentation-Writer.agent.md` and study the structure
+2. Create a new file: `.github/agents/Security-Reviewer.agent.md`
+3. Add this content (customize as you like):
 
 ```markdown
 ---
-name: Documentation Writer
-description: Generate and update project documentation, Swagger docs, and README files
-tools: ['search', 'codebase', 'editFiles']
+name: Security Reviewer
+description: Review code for OWASP Top 10 vulnerabilities and insecure patterns in the OctoCAT API
+tools: ['search', 'codebase']
 model: Claude Sonnet 4.6 (copilot)
 ---
 
-# Documentation Writer Agent
+# Security Reviewer Agent
 
 ## Role
-You are a technical documentation specialist for the OctoCAT Supply Chain project.
+You are a security specialist focused on the OctoCAT Supply Chain Express.js API.
+You identify vulnerabilities without making code changes — report only.
 
-## What You Do
-1. **API Docs** — Generate Swagger JSDoc for undocumented endpoints
-2. **README** — Update project README with new features
-3. **Architecture** — Update docs/architecture.md when structure changes
-4. **Code Comments** — Add JSDoc to interfaces and complex functions
+## What You Check
+1. **Input Validation** — Unvalidated `req.body` fields used directly
+2. **Injection** — ID params used without `parseInt()` / `isNaN()` guard
+3. **Error Leakage** — Stack traces or internal details sent to clients
+4. **Hardcoded Secrets** — API keys, passwords, or tokens in source code
+5. **Missing Auth** — Routes that should require authentication but don't
 
-## Workflow
-1. Scan the codebase for missing documentation
-2. Prioritize: Swagger > README > Architecture > Code comments
-3. Generate documentation following existing patterns
-4. Verify Swagger renders at /api-docs
+## Output Format
+
+| Severity | Issue | File | Line | Remediation |
+|----------|-------|------|------|-------------|
+| HIGH | Unvalidated body used directly | supplier.ts | 92 | Destructure and check required fields |
 
 ## Rules
-- Match the tone and style of existing documentation
-- Never remove existing documentation
-- Always include code examples in guides
-- Use Mermaid diagrams for architecture visualizations
+- Report findings only — do not modify files
+- Classify each finding as HIGH / MEDIUM / LOW
+- Always suggest a concrete remediation step
 ```
 
-3. Test your agent:
+4. Test your agent:
    - Open the agent picker (model selector at the bottom of the Chat panel)
-   - Select **Documentation Writer** from the list
-   - Ask: "What API endpoints in #file:api/src/routes/supplier.ts are missing Swagger documentation?"
+   - Select **Security Reviewer** from the list
+   - Ask: `Review #file:api/src/routes/supplier.ts for security issues`
 
 <details>
 <summary>✅ Success Criteria</summary>
 
 - Agent file created with valid YAML frontmatter
-- Agent appears in the agent picker and responds with its specialized persona
-- Identifies undocumented endpoints by reading route files via `#file:` references
+- Agent appears in the agent picker and uses its security-focused persona
+- Returns a structured severity table, not a generic response
+- Does not attempt to edit files (tools list has no `editFiles`)
 
 </details>
 
 ---
 
-## Exercise 5: Use Plan Mode
+## Exercise 5: Explore More Instruction Patterns
+
+**Goal**: Understand the difference between global instructions, file-scoped instructions, and how to write new ones.
+
+### The Customization Hierarchy
+
+```
+copilot-instructions.md          ← Always active (every chat)
+    └── instructions/*.instructions.md   ← Active only when applyTo pattern matches
+            └── prompts/*.prompt.md      ← Active only when explicitly run
+                    └── agents/*.agent.md  ← Active only when agent is selected
+```
+
+### A) Compare global vs. file-scoped behavior
+
+1. Open `api/src/routes/branch.ts` in the editor
+2. In **Edit** mode, ask:
+   ```
+   Add a new field called `managerEmail` to this route
+   ```
+   Notice: Copilot uses `{ error: string }` shapes, Swagger JSDoc, and 404 patterns automatically — because `api-routes.instructions.md` applies to `api/src/routes/**/*.ts`.
+
+3. Now open `api/src/seedData.ts` and ask the same question.
+   Notice: Copilot behaves differently — no Swagger requirement enforced, because the pattern `api/src/routes/**/*.ts` does **not** match `seedData.ts`.
+
+### B) Read the new models instruction
+
+1. Open `.github/instructions/models.instructions.md` — note its `applyTo: 'api/src/models/**/*.ts'` target
+2. Open `api/src/models/supplier.ts` in the editor
+3. In **Edit** mode ask:
+   ```
+   Add a `country` field to the Supplier model
+   ```
+   Copilot will add the field to both the TypeScript interface AND the Swagger schema, include a FK-style description, and mark optional fields with `?` — all because of the models instruction.
+
+### C) Write your own file-scoped instruction
+
+1. Create `.github/instructions/seeddata.instructions.md`:
+
+```markdown
+---
+applyTo: '**/seedData.ts'
+---
+
+# Seed Data Instructions
+
+- Keep seed data realistic but clearly fictional (cat-themed names, addresses, etc.)
+- Every seed array must have at least 3 entries
+- IDs must start at 1 and be sequential with no gaps
+- Do NOT add `Date.now()` or random values — seed data must be deterministic
+- When adding a new entity, export it as `export const <plural>: <Type>[] = [...]`
+```
+
+2. Open `api/src/seedData.ts` and ask:
+   ```
+   Add 2 more suppliers to the seed data
+   ```
+   Copilot will use cat-themed names, sequential IDs, and deterministic data — because the instruction now applies.
+
+<details>
+<summary>✅ Success Criteria</summary>
+
+- `api-routes.instructions.md` behavior is NOT triggered on `seedData.ts`
+- `models.instructions.md` causes Copilot to update both TS interface AND Swagger schema
+- New `seeddata.instructions.md` makes Copilot use cat-themed, deterministic seed data
+- You can see the `applyTo` pattern is the key difference
+
+</details>
+
+---
+
+## Exercise 6: Use Plan Mode
 
 **Goal**: Use Plan mode to design a feature before implementing it.
 
@@ -256,8 +357,10 @@ Create `.github/skills/documentation-audit/SKILL.md` with a description of scrip
 In this lesson you:
 - ✅ Explored the customization hierarchy
 - ✅ Observed file-specific instructions changing behavior
-- ✅ Created a custom prompt file
-- ✅ Created a custom agent persona
+- ✅ Created a custom prompt file (`add-input-validation`)
+- ✅ Created a custom agent persona (`Security-Reviewer`)
+- ✅ Compared global vs. scoped instruction behavior
+- ✅ Wrote your own file-scoped instruction
 - ✅ Used Plan mode for feature design
 
 **Next**: [Lesson 3 — Copilot CLI](../03-copilot-cli/readme.md)
