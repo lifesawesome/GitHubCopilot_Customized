@@ -197,4 +197,4 @@ the existing pattern in `api/src/routes/branch.test.ts`.
 ## Next Steps
 
 - [Hands-on Exercises](hands-on-exercises.md) — Assign your first agent task
-- [Lesson 5: MCP Servers & Extensions](../05-mcp-and-extensions/readme.md) — Extend Copilot's capabilities
+- [Lesson 5: Spec Kit Development](../05-spec-kit-development/readme.md) — Author your team's Copilot customization files

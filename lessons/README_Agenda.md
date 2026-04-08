@@ -13,8 +13,10 @@
 | 2:00 - 2:15 | — | Break | 15 min |
 | 2:15 - 3:15 | [Lesson 4](04-coding-agent/readme.md) | Coding Agent | 60 min |
 | 3:15 - 3:30 | — | Break | 15 min |
-| 3:30 - 4:30 | [Lesson 5](05-mcp-and-extensions/readme.md) | MCP Servers & Extensions | 60 min |
-| 4:30 - 5:00 | — | Wrap-up, Q&A & Next Steps | 30 min |
+| 3:30 - 4:30 | [Lesson 5](05-spec-kit-development/readme.md) | Spec Kit Development | 60 min |
+| 4:30 - 4:45 | — | Break | 15 min |
+| 4:45 - 5:45 | [Lesson 6](05-mcp-and-extensions/readme.md) | MCP Servers & Extensions | 60 min |
+| 5:45 - 6:00 | — | Wrap-up, Q&A & Next Steps | 15 min |
 
 ---
 
@@ -57,7 +59,8 @@ By the end of this workshop, participants will be able to:
 2. **Customize Copilot** — Create instructions, prompts, agents, and skills for their teams
 3. **Leverage Copilot CLI** — Use `gh copilot` for terminal-based AI assistance
 4. **Assign work to Coding Agent** — Use GitHub's autonomous coding agent for issues and PRs
-5. **Extend with MCP** — Connect Copilot to external tools via Model Context Protocol
+5. **Author a spec kit** — Build and validate the full set of Copilot customization artifacts
+6. **Extend with MCP** — Connect Copilot to external tools via Model Context Protocol
 
 ---
 
@@ -96,7 +99,10 @@ Install and use `gh copilot` in the terminal for shell commands, code explanatio
 ### Lesson 4: Coding Agent (60 min)
 Learn how GitHub Copilot's autonomous coding agent works — assign issues, review PRs, use custom instructions for agent guidance.
 
-### Lesson 5: MCP Servers & Extensions (60 min)
+### Lesson 5: Spec Kit Development (60 min)
+Author, organize, and validate the full set of Copilot customization files (instructions, prompts, agents, skills). Understand when to use each artifact type and how to build a team spec kit.
+
+### Lesson 6: MCP Servers & Extensions (60 min)
 Extend Copilot with Model Context Protocol servers (Playwright, GitHub, custom) and explore advanced integration patterns.
 
 ---
