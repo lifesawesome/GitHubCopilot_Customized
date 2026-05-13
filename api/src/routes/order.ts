@@ -107,6 +107,11 @@ const router = express.Router();
 
 let orders: Order[] = [...seedOrders];
 
+// Add reset function for testing
+export const resetOrders = () => {
+  orders = [...seedOrders];
+};
+
 // Create a new order
 router.post('/', (req, res) => {
   const newOrder: Order = req.body;
@@ -125,7 +130,7 @@ router.get('/:id', (req, res) => {
   if (order) {
     res.json(order);
   } else {
-    res.status(404).send('Order not found');
+    res.status(404).json({ error: 'Order not found' });
   }
 });
 
@@ -136,7 +141,7 @@ router.put('/:id', (req, res) => {
     orders[index] = req.body;
     res.json(orders[index]);
   } else {
-    res.status(404).send('Order not found');
+    res.status(404).json({ error: 'Order not found' });
   }
 });
 
@@ -147,7 +152,7 @@ router.delete('/:id', (req, res) => {
     orders.splice(index, 1);
     res.status(204).send();
   } else {
-    res.status(404).send('Order not found');
+    res.status(404).json({ error: 'Order not found' });
   }
 });
 
