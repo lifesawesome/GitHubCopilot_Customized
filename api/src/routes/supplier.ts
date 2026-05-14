@@ -107,6 +107,11 @@ const router = express.Router();
 
 let suppliers: Supplier[] = [...seedSuppliers];
 
+// Add reset function for testing
+export const resetSuppliers = () => {
+    suppliers = [...seedSuppliers];
+};
+
 // Create a new supplier
 router.post('/', (req, res) => {
     const newSupplier = req.body as Supplier;
