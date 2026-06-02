@@ -13,6 +13,7 @@ import supplierRoutes from './routes/supplier';
 
 const app = express();
 const port = process.env.PORT || 3000;
+const isProduction = process.env.NODE_ENV === 'production';
 
 // Parse CORS origins from environment variable if available
 const corsOrigins = process.env.API_CORS_ORIGINS 
@@ -23,8 +24,6 @@ const corsOrigins = process.env.API_CORS_ORIGINS
       // Allow all Codespace domains
       /^https:\/\/.*\.app\.github\.dev$/
     ];
-
-console.log('Configured CORS origins:', corsOrigins);
 
 // Enable CORS for the frontend
 app.use(cors({
@@ -80,6 +79,8 @@ app.get('/', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-  console.log(`API documentation is available at http://localhost:${port}/api-docs`);
+  if (!isProduction) {
+    console.info(`Server is running on port ${port}`);
+    console.info(`API documentation is available at http://localhost:${port}/api-docs`);
+  }
 });
