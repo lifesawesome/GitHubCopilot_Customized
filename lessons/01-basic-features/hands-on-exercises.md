@@ -29,16 +29,18 @@
 2. Try these prompts:
 
 ```
-What is this project about? Summarize the architecture.
+Summarize architecture and tech stack
 ```
 
 ```
-How many API routes exist and what entities do they serve?
+List all API route files and their entities
 ```
 
 ```
-What is the ERD relationship between Orders, OrderDetails, and Products?
+Show ERD: Orders → OrderDetails → Products
 ```
+
+> **Prompt tip**: Short, keyword-rich prompts use fewer tokens and produce equally good results. Copilot already has codebase context — no need to repeat "this project" or ask full questions.
 
 <details>
 <summary>✅ Success Criteria</summary>
@@ -66,7 +68,7 @@ What is the ERD relationship between Orders, OrderDetails, and Products?
 4. Now open `frontend/src/components/Welcome.tsx` and ask:
 
 ```
-Explain how the Welcome component works, including the brand carousel.
+Explain Welcome.tsx carousel and hero section
 ```
 
 <details>
@@ -89,7 +91,7 @@ Explain how the Welcome component works, including the brand carousel.
 3. Select the code block and use inline chat (`Ctrl+I`):
 
 ```
-Add input validation — return 400 if required fields are missing in the request body
+Add 400 validation for missing required fields
 ```
 
 4. Review the suggested changes and Accept or Reject
@@ -122,7 +124,7 @@ Add input validation — return 400 if required fields are missing in the reques
 6. Type in inline chat:
 
 ```
-Add complete Swagger JSDoc documentation for this endpoint
+Add Swagger JSDoc matching branch.ts pattern
 ```
 
 <details>
@@ -144,13 +146,7 @@ Add complete Swagger JSDoc documentation for this endpoint
 2. Enter this prompt:
 
 ```
-Create a test file for the supplier route at api/src/routes/supplier.test.ts. Follow the exact pattern used in branch.test.ts. Include tests for:
-- GET all suppliers
-- GET supplier by ID
-- POST create supplier
-- PUT update supplier
-- DELETE supplier
-- 404 for non-existing supplier
+Create api/src/routes/supplier.test.ts following branch.test.ts pattern. Cover full CRUD + 404 errors.
 ```
 
 3. Watch Copilot:
@@ -182,7 +178,7 @@ npm test --workspace=api -- src/routes/supplier.test.ts
 Open Copilot Chat in Agent mode and try:
 
 ```
-Analyze the test coverage of the API project. Which routes have tests and which don't? Create a markdown report.
+Report API test coverage: which routes have/lack test files
 ```
 
 ---

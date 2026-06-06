@@ -1,6 +1,7 @@
 ---
 name: 'codebase-health'
 description: 'Assess overall codebase health: dependency freshness, code complexity, and security patterns'
+agent: 'agent'
 ---
 
 # Codebase Health Skill

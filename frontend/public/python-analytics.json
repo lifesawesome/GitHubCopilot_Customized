@@ -1,0 +1,92 @@
+{
+  "kpis": {
+    "suppliers": 3,
+    "products": 6,
+    "orders": 8,
+    "deliveries": 9,
+    "overall_on_time_rate": 55.56,
+    "overall_avg_delay_days": 1
+  },
+  "supplier_performance": [
+    {
+      "supplier_id": 1,
+      "supplier_name": "PurrTech Industries",
+      "total_deliveries": 3,
+      "on_time_rate": 66.67,
+      "avg_delay_days": 0.67
+    },
+    {
+      "supplier_id": 2,
+      "supplier_name": "WhiskerWare Labs",
+      "total_deliveries": 3,
+      "on_time_rate": 33.33,
+      "avg_delay_days": 1.33
+    },
+    {
+      "supplier_id": 3,
+      "supplier_name": "CatNip Creations",
+      "total_deliveries": 3,
+      "on_time_rate": 66.67,
+      "avg_delay_days": 1
+    }
+  ],
+  "branch_order_trend": [
+    {
+      "branch_id": 1,
+      "branch_name": "Meowtown Central",
+      "orders": 3
+    },
+    {
+      "branch_id": 2,
+      "branch_name": "Tabby Terrace",
+      "orders": 3
+    },
+    {
+      "branch_id": 3,
+      "branch_name": "Pawline Point",
+      "orders": 2
+    }
+  ],
+  "top_delayed_products": [
+    {
+      "product_id": 6,
+      "product_name": "PawSense Tracker",
+      "total_quantity": 11,
+      "risk_score": 11
+    },
+    {
+      "product_id": 3,
+      "product_name": "Laser Chase 360",
+      "total_quantity": 8,
+      "risk_score": 10.67
+    },
+    {
+      "product_id": 4,
+      "product_name": "Nap Pod Deluxe",
+      "total_quantity": 6,
+      "risk_score": 8.0
+    }
+  ],
+  "data_preview": {
+    "suppliers": [
+      {
+        "id": 1,
+        "name": "PurrTech Industries"
+      },
+      {
+        "id": 2,
+        "name": "WhiskerWare Labs"
+      }
+    ],
+    "branches": [
+      {
+        "id": 1,
+        "name": "Meowtown Central"
+      },
+      {
+        "id": 2,
+        "name": "Tabby Terrace"
+      }
+    ]
+  }
+}

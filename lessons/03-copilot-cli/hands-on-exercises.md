@@ -41,11 +41,11 @@ copilot
 2. Try these prompts in the interactive interface:
 
 ```
-count how many TypeScript files are in the api/src directory
+count TypeScript files in api/src
 ```
 
 ```
-list all Express route files in this project
+list Express route files
 ```
 
 3. Reference a file directly with `@`:
@@ -89,19 +89,19 @@ list all Express route files in this project
 **Goal**: Use prompt mode (`-p`) for one-shot build and test commands.
 
 ```powershell
-copilot -p "install dependencies for this npm monorepo"
+copilot -p "install deps for this npm monorepo"
 ```
 
 ```powershell
-copilot -p "run only the API tests using vitest"
+copilot -p "run API tests with vitest"
 ```
 
 ```powershell
-copilot -p "run tests with coverage for the api workspace"
+copilot -p "run API tests with coverage"
 ```
 
 ```powershell
-copilot -p "explain what the build script in api/package.json does"
+copilot -p "explain api/package.json build script"
 ```
 
 Try interactive mode with an initial prompt:
@@ -137,7 +137,7 @@ copilot
 Press **Shift+Tab** until you see "plan" mode, or use:
 
 ```
-/plan add a new GET endpoint to the supplier route that returns suppliers filtered by name
+/plan add GET /suppliers?name= endpoint with Swagger
 ```
 
 3. Review the plan Copilot creates — it should outline:
@@ -148,7 +148,7 @@ Press **Shift+Tab** until you see "plan" mode, or use:
 4. Try another plan:
 
 ```
-/plan add Swagger documentation to the delivery route file
+/plan add Swagger docs to delivery route
 ```
 
 5. If you approve the plan, let Copilot execute it. Otherwise, clear and try something else:
@@ -226,13 +226,13 @@ see the commit history for just the api/src/routes directory
 1. Run a task in autopilot mode (no confirmation prompts):
 
 ```powershell
-copilot --autopilot -p "list all route files that are missing Swagger documentation"
+copilot --autopilot -p "list route files missing Swagger docs"
 ```
 
 2. Use `--silent` for scripting-friendly output:
 
 ```powershell
-copilot -s -p "count the total number of API endpoints across all route files"
+copilot -s -p "count total API endpoints across all route files"
 ```
 
 3. Launch interactive and use `/fleet` for parallel execution:
@@ -242,7 +242,7 @@ copilot
 ```
 
 ```
-/fleet check all route files for missing error handling on DELETE endpoints
+/fleet check route files for missing DELETE error handling
 ```
 
 4. Control tool permissions:
@@ -276,7 +276,7 @@ copilot
 2. Run the code review agent:
 
 ```
-/review analyze the api/src/routes directory for security issues and missing validation
+/review scan api/src/routes for security issues and missing validation
 ```
 
 3. Check session info:

@@ -23,11 +23,10 @@ Out-of-the-box Copilot doesn't know your team's conventions, internal frameworks
 .github/
 ├── copilot-instructions.md          # 1. Global repo instructions
 ├── instructions/                     # 2. File-type specific rules
-│   ├── typescript.instructions.md    #    → Applied to **/*.ts
+│   ├── express.instructions.md       #    → Applied to api/**/*.ts
 │   ├── react.instructions.md         #    → Applied to **/*.tsx
-│   ├── api-routes.instructions.md    #    → Applied to api/**/*.ts
-│   ├── testing.instructions.md       #    → Applied to **/*.test.ts
-│   └── project.instructions.md       #    → Applied to **/*.json
+│   ├── python.instructions.md        #    → Applied to **/*.py
+│   └── testing.instructions.md       #    → Applied to **/*.test.ts
 ├── prompts/                          # 3. Reusable task prompts
 │   ├── explain-code.prompt.md
 │   ├── add-swagger-docs.prompt.md
@@ -98,11 +97,10 @@ applyTo: '**/*.ts'
 
 | File | Applies To | Key Rules |
 |------|-----------|-----------|
-| `typescript.instructions.md` | `**/*.ts` | Strict mode, naming, error handling |
+| `express.instructions.md` | `api/**/*.ts` | Swagger docs, CRUD pattern, HTTP status codes, model conventions |
 | `react.instructions.md` | `**/*.tsx` | Functional components, Tailwind, props interfaces |
-| `api-routes.instructions.md` | `api/src/routes/**/*.ts` | Swagger docs, CRUD pattern, HTTP status codes |
+| `python.instructions.md` | `**/*.py` | PEP 8, type hints, docstrings |
 | `testing.instructions.md` | `**/*.test.ts` | Vitest/Supertest, coverage requirements |
-| `project.instructions.md` | `**/*.json` | Monorepo workspace scripts, dependencies |
 
 ### Demo: File-Specific Rules
 

@@ -1,10 +1,11 @@
 ---
-applyTo: 'api/src/routes/**/*.ts'
+applyTo: 'api/**/*.ts'
 ---
 
-# Express API Route Instructions
+# Express API Instructions
 
 ## Route File Structure
+
 Every route file follows this pattern:
 
 ```typescript
@@ -20,7 +21,15 @@ let entities: Entity[] = [...seedEntities];
 export default router;
 ```
 
+Routes are mounted in `index.ts`:
+
+```typescript
+app.use('/api/products', productRoutes);
+app.use('/api/branches', branchRoutes);
+```
+
 ## Swagger Documentation
+
 Every endpoint MUST have Swagger JSDoc comments:
 
 ```typescript
@@ -56,47 +65,88 @@ router.get('/', (req: Request, res: Response) => {
 | DELETE | 204 | 404 | — |
 
 ## Error Responses
+
 Return consistent error shapes:
 
 ```typescript
-// 404
 res.status(404).json({ error: 'Product not found' });
-
-// 400
 res.status(400).json({ error: 'Name is required' });
 ```
 
 ## ID Generation
-Use auto-incrementing IDs based on existing data:
 
 ```typescript
-const newId = entities.length > 0 
-    ? Math.max(...entities.map(e => e.id)) + 1 
+const newId = entities.length > 0
+    ? Math.max(...entities.map(e => e.id)) + 1
     : 1;
 ```
 
-## Route Registration
-Routes are mounted in `index.ts`:
+## CORS
+
+Configured at the app level in `index.ts`. Do not add CORS headers in individual routes.
+
+---
+
+## Model / Interface Files
+
+Every model file exports one `interface` and one `@swagger` JSDoc schema block:
 
 ```typescript
-app.use('/api/products', productRoutes);
-app.use('/api/branches', branchRoutes);
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Widget:
+ *       type: object
+ *       required:
+ *         - id
+ *         - name
+ *       properties:
+ *         id:
+ *           type: integer
+ *         name:
+ *           type: string
+ */
+export interface Widget {
+    id: number;
+    name: string;
+}
 ```
 
-## CORS
-CORS is configured at the app level in `index.ts`. Do not add CORS headers in individual routes.
+### Naming Conventions
+
+| Item | Convention | Example |
+|------|-----------|---------|
+| Interface | Singular PascalCase | `Branch`, `OrderDetail` |
+| Primary key | `<entity>Id` (camelCase) | `branchId`, `supplierId` |
+| File | Singular camelCase | `orderDetail.ts` |
+
+### Rules
+
+- Mark optional properties with `?` in TypeScript and omit from `required` in Swagger.
+- Document FK relationships in property descriptions.
+- No business logic in model files — only interfaces and Swagger JSDoc.
+
+---
 
 ## Observability (TAO)
+
 When adding observability, use the TAO framework decorators:
 - `@Measure` for performance metrics
 - `@Trace` for distributed tracing
 - `@Log` for structured logging
 - Assume TAO is installed — never add the package
 
+---
+
 ## Code Review Checklist
-- [ ] Swagger JSDoc comments on every endpoint
+
+- [ ] Swagger JSDoc on every endpoint
 - [ ] Proper HTTP status codes
 - [ ] Input validation on POST/PUT
 - [ ] 404 handling for GET/PUT/DELETE by ID
 - [ ] Consistent error response format
 - [ ] Route mounted in index.ts
+- [ ] Model interface + schema defined
+- [ ] No unnecessary dependencies added
+- [ ] TypeScript strict mode compiles without errors

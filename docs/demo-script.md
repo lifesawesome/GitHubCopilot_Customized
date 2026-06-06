@@ -38,6 +38,37 @@ This demo app can be used to show a number of Copilot features:
 
 Refer to [the build docs](./build.md).
 
+### **Demo: Standalone Python Analytics Module (No Dependencies)**
+
+- **What to show:** A separate Python module that demonstrates business analytics with hardcoded data and zero external dependencies.
+- **Why:** Show polyglot capability without changing the existing TypeScript architecture or requiring any running API/frontend services.
+- **How:**
+  1. Open the [octocat_python_analytics/README.md](../octocat_python_analytics/README.md) file and explain the zero-dependency design.
+  1. Run the summary mode from repo root:
+    ```bash
+    python -m octocat_python_analytics.main --mode summary
+    ```
+  1. Run JSON mode to show machine-readable output:
+    ```bash
+    python -m octocat_python_analytics.main --mode json
+    ```
+    1. Export JSON into frontend public assets for in-app UI demo:
+      ```bash
+      python -m octocat_python_analytics.main --mode json-file --output frontend/public/python-analytics.json
+      ```
+    1. Open the app and navigate to `/admin/python-analytics` to show the same Python output rendered in the React UI.
+  1. Generate a static HTML report:
+    ```bash
+    python -m octocat_python_analytics.main --mode report
+    ```
+  1. Open `octocat_python_analytics/output/analytics_report.html` in the browser and walk through supplier performance, branch order trend, and delayed product risk.
+  1. Run tests:
+    ```bash
+    python -m unittest discover -s octocat_python_analytics/tests -p "test_*.py"
+    ```
+
+- **Key Takeaway:** You can present meaningful Python functionality with no API integrations, no package installation, and no infrastructure dependencies.
+
 ### **Full end-to-end Azure Deplyment Demo (optional)**
 
 This demo requires the following:

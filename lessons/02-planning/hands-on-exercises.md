@@ -18,19 +18,19 @@
 **Goal**: Understand the customization hierarchy by reading existing files.
 
 1. Open `.github/copilot-instructions.md` — read the project overview section
-2. Open `.github/instructions/api-routes.instructions.md` — note the `applyTo` pattern
+2. Open `.github/instructions/express.instructions.md` — note the `applyTo` pattern covers all API TypeScript files
 3. Open `.github/instructions/react.instructions.md` — note the Tailwind/dark mode rules
 4. Open `.github/prompts/review-api-route.prompt.md` — note the YAML frontmatter
 
 **Questions to answer**:
-- What pattern does `api-routes.instructions.md` apply to?
+- What pattern does `express.instructions.md` apply to?
 - What mode does the `review-api-route` prompt use?
 - Where does Copilot learn about the TAO observability framework?
 
 <details>
 <summary>✅ Answers</summary>
 
-- `api/src/routes/**/*.ts`
+- `api/**/*.ts`
 - `ask` mode
 - From `copilot-instructions.md` and `docs/tao.md`
 
@@ -42,19 +42,19 @@
 
 **Goal**: Observe each customization type producing real output from this codebase.
 
-### 1. Instructions file — `api-routes.instructions.md`
+### 1. Instructions file — `express.instructions.md`
 
 Open `api/src/routes/supplier.ts`, then in **Edit** mode ask:
 ```
-Add a route to search suppliers by name
+Add search-by-name route with Swagger
 ```
-Copilot automatically adds a Swagger JSDoc block, returns `{ error: 'Supplier not found' }` (not a plain string), and uses status 404 — because `.github/instructions/api-routes.instructions.md` applies to every file matching `api/src/routes/**/*.ts`.
+Copilot automatically adds a Swagger JSDoc block, returns `{ error: 'Supplier not found' }` (not a plain string), and uses status 404 — because `.github/instructions/express.instructions.md` applies to every file matching `api/**/*.ts`.
 
 ### 2. Global instructions — `copilot-instructions.md` + TAO
 
 In **Agent** mode ask:
 ```
-Add observability to #file:api/src/routes/supplier.ts using our internal standards
+Add TAO observability to #file:api/src/routes/supplier.ts
 ```
 Copilot uses `@Measure`, `@Trace`, and `@Log` from the TAO framework — even though TAO isn't a public package. It learned this from `.github/copilot-instructions.md` which references `docs/tao.md`.
 
@@ -67,7 +67,7 @@ Copilot wraps every handler in try/catch with 404/400/500 responses — exactly 
 
 Open `frontend/src/components/entity/product/Products.tsx`, then in **Edit** mode ask:
 ```
-Add a SupplierCard component that displays supplier name, contact person, and email
+Add SupplierCard component: name, contact, email with dark mode
 ```
 Copilot generates a functional component with a TypeScript props interface, uses only Tailwind utility classes (no inline styles), and includes `dark:` prefixes for dark mode support — because `.github/instructions/react.instructions.md` applies to every `**/*.tsx` file.
 
@@ -83,7 +83,7 @@ Copilot generates a `supplier.test.ts` file using Vitest + Supertest, with a fre
 
 Open the agent picker (model selector at the bottom of Chat), select **Documentation Writer**, then ask:
 ```
-Which routes in #file:api/src/routes/supplier.ts are missing Swagger documentation?
+Which routes in #file:api/src/routes/supplier.ts lack Swagger docs?
 ```
 The agent reads the file and reports gaps using its specialised documentation persona, rather than giving a generic Copilot response.
 
@@ -249,22 +249,22 @@ copilot-instructions.md          ← Always active (every chat)
 1. Open `api/src/routes/branch.ts` in the editor
 2. In **Edit** mode, ask:
    ```
-   Add a new field called `managerEmail` to this route
+   Add managerEmail field to this route
    ```
-   Notice: Copilot uses `{ error: string }` shapes, Swagger JSDoc, and 404 patterns automatically — because `api-routes.instructions.md` applies to `api/src/routes/**/*.ts`.
+   Notice: Copilot uses `{ error: string }` shapes, Swagger JSDoc, and 404 patterns automatically — because `express.instructions.md` applies to `api/**/*.ts`.
 
 3. Now open `api/src/seedData.ts` and ask the same question.
-   Notice: Copilot behaves differently — no Swagger requirement enforced, because the pattern `api/src/routes/**/*.ts` does **not** match `seedData.ts`.
+   Notice: Copilot still follows the instruction since `seedData.ts` matches `api/**/*.ts`. This is fine — the instruction covers the whole API workspace.
 
-### B) Read the new models instruction
+### B) Read the express instruction
 
-1. Open `.github/instructions/models.instructions.md` — note its `applyTo: 'api/src/models/**/*.ts'` target
+1. Open `.github/instructions/express.instructions.md` — note its `applyTo: 'api/**/*.ts'` target covers routes, models, and all API source
 2. Open `api/src/models/supplier.ts` in the editor
 3. In **Edit** mode ask:
    ```
-   Add a `country` field to the Supplier model
+   Add country field to Supplier
    ```
-   Copilot will add the field to both the TypeScript interface AND the Swagger schema, include a FK-style description, and mark optional fields with `?` — all because of the models instruction.
+   Copilot will add the field to both the TypeScript interface AND the Swagger schema, include a FK-style description, and mark optional fields with `?` — all because the express instruction covers model conventions too.
 
 ### C) Write your own file-scoped instruction
 
@@ -286,15 +286,15 @@ applyTo: '**/seedData.ts'
 
 2. Open `api/src/seedData.ts` and ask:
    ```
-   Add 2 more suppliers to the seed data
+   Add 2 more suppliers with cat-themed names
    ```
    Copilot will use cat-themed names, sequential IDs, and deterministic data — because the instruction now applies.
 
 <details>
 <summary>✅ Success Criteria</summary>
 
-- `api-routes.instructions.md` behavior is NOT triggered on `seedData.ts`
-- `models.instructions.md` causes Copilot to update both TS interface AND Swagger schema
+- `express.instructions.md` behavior IS triggered on all `api/**/*.ts` files including seedData
+- Express instruction causes Copilot to update both TS interface AND Swagger schema for models
 - New `seeddata.instructions.md` makes Copilot use cat-themed, deterministic seed data
 - You can see the `applyTo` pattern is the key difference
 

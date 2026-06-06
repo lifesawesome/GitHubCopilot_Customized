@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OctoCAT Python Demo Analytics</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 24px;
+      color: #1f2937;
+      background: #f8fafc;
+    }
+    h1, h2 { color: #0f172a; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 20px;
+    }
+    th, td {
+      border-bottom: 1px solid #e2e8f0;
+      text-align: left;
+      padding: 8px;
+      font-size: 14px;
+    }
+    th { background: #f1f5f9; }
+  </style>
+</head>
+<body>
+  <h1>OctoCAT Standalone Python Analytics</h1>
+  <p>Fully hardcoded dataset. No external services or packages required.</p>
+
+  <div class="grid">
+    <div class="card"><strong>Suppliers</strong><br>3</div>
+    <div class="card"><strong>Products</strong><br>6</div>
+    <div class="card"><strong>Orders</strong><br>8</div>
+    <div class="card"><strong>Deliveries</strong><br>9</div>
+    <div class="card"><strong>Overall On-Time Rate</strong><br>55.56%</div>
+    <div class="card"><strong>Average Delay</strong><br>1 days</div>
+  </div>
+
+  <h2>Supplier Performance</h2>
+  <table><thead><tr><th>Supplier</th><th>Deliveries</th><th>On-Time %</th><th>Avg Delay (days)</th></tr></thead><tbody><tr><td>PurrTech Industries</td><td>3</td><td>66.67%</td><td>0.67</td></tr><tr><td>WhiskerWare Labs</td><td>3</td><td>33.33%</td><td>1.33</td></tr><tr><td>CatNip Creations</td><td>3</td><td>66.67%</td><td>1</td></tr></tbody></table>
+
+  <h2>Branch Order Trend</h2>
+  <table><thead><tr><th>Branch</th><th>Orders</th></tr></thead><tbody><tr><td>Meowtown Central</td><td>3</td></tr><tr><td>Tabby Terrace</td><td>3</td></tr><tr><td>Pawline Point</td><td>2</td></tr></tbody></table>
+
+  <h2>Top Delayed Product Risk</h2>
+  <table><thead><tr><th>Product</th><th>Total Qty</th><th>Risk Score</th></tr></thead><tbody><tr><td>PawSense Tracker</td><td>11</td><td>11</td></tr><tr><td>Laser Chase 360</td><td>8</td><td>10.67</td></tr><tr><td>Nap Pod Deluxe</td><td>6</td><td>8.0</td></tr></tbody></table>
+</body>
+</html>

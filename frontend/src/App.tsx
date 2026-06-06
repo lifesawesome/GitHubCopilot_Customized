@@ -7,7 +7,10 @@ import Products from './components/entity/product/Products';
 import Login from './components/Login';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { CartProvider } from './context/CartContext';
+import Cart from './components/Cart';
 import AdminProducts from './components/admin/AdminProducts';
+import PythonAnalyticsDemo from './components/admin/PythonAnalyticsDemo';
 import { useTheme } from './context/ThemeContext';
 
 // Wrapper component to apply theme classes
@@ -18,6 +21,7 @@ function ThemedApp() {
     <Router>
       <div className={`flex flex-col min-h-screen ${darkMode ? 'bg-dark' : 'bg-gray-100'} transition-colors duration-300`}>
         <Navigation />
+        <Cart />
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Welcome />} />
@@ -25,6 +29,7 @@ function ThemedApp() {
             <Route path="/products" element={<Products />} />
             <Route path="/login" element={<Login />} />
             <Route path="/admin/products" element={<AdminProducts />} />
+            <Route path="/admin/python-analytics" element={<PythonAnalyticsDemo />} />
           </Routes>
         </main>
         <Footer />
@@ -37,7 +42,9 @@ function App() {
   return (
     <AuthProvider>
       <ThemeProvider>
-        <ThemedApp />
+        <CartProvider>
+          <ThemedApp />
+        </CartProvider>
       </ThemeProvider>
     </AuthProvider>
   );

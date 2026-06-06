@@ -66,28 +66,19 @@
 ### Navigate and Verify
 
 ```
-Browse to http://localhost:5137 and describe what you see on the home page.
+Browse http://localhost:5137 and describe the home page
 ```
 
 ### Test the Products Page
 
 ```
-Browse to http://localhost:5137/products and:
-1. Count how many products are displayed
-2. Check if a search bar exists
-3. Search for "SmartFeeder" 
-4. Report what products match the search
+Browse http://localhost:5137/products: count products, check search bar, search "SmartFeeder", report matches
 ```
 
 ### Verify Navigation
 
 ```
-Browse to http://localhost:5137 and test the navigation:
-1. Click on "Products" in the nav bar
-2. Verify the products page loads
-3. Click on "About" 
-4. Verify the about page loads
-5. Report the navigation test results
+Browse http://localhost:5137 → click Products → verify load → click About → verify load → report results
 ```
 
 <details>
@@ -114,7 +105,7 @@ Browse to http://localhost:5137 and test the navigation:
 ### List Issues
 
 ```
-List all open issues in this repository.
+List open issues in this repo
 ```
 
 ### Create an Issue
@@ -129,13 +120,13 @@ Labels: enhancement
 ### Search Repository
 
 ```
-Search this repository for any files that contain "TODO" or "FIXME" comments.
+Search repo for TODO or FIXME comments
 ```
 
 ### Create Issue for Agent
 
 ```
-Create an issue to add unit tests for the Order API route following the branch.test.ts pattern. Assign it to Copilot.
+Create issue: add Order tests following branch.test.ts pattern. Assign to Copilot.
 ```
 
 <details>
