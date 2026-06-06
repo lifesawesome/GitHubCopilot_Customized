@@ -107,6 +107,11 @@ const router = express.Router();
 
 let orders: Order[] = [...seedOrders];
 
+// Add reset function for testing
+export const resetOrders = () => {
+  orders = [...seedOrders];
+};
+
 // Create a new order
 router.post('/', (req, res) => {
   const newOrder: Order = req.body;
