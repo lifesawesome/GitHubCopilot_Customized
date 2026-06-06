@@ -8,17 +8,26 @@
  *         - orderId
  *         - branchId
  *         - orderDate
+ *         - name
+ *         - description
+ *         - status
  *       properties:
  *         orderId:
  *           type: integer
  *           description: The unique identifier for the order
  *         branchId:
  *           type: integer
- *           description: The ID of the branch that placed the order
+ *           description: ID of the Branch this order belongs to (FK → Branch.branchId)
  *         orderDate:
  *           type: string
  *           format: date-time
  *           description: The date and time when the order was placed
+ *         name:
+ *           type: string
+ *           description: The name of the order
+ *         description:
+ *           type: string
+ *           description: A description of the order
  *         status:
  *           type: string
  *           description: The current status of the order
@@ -34,5 +43,6 @@ export interface Order {
     orderDate: string;
     name: string;
     description: string;
-    status: string;
+    status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+    totalAmount?: number;
 }
