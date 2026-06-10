@@ -10,6 +10,7 @@
 | 4 | Git & PR Automation | `/delegate`, `/diff` | 5 min |
 | 5 | Autopilot & Parallel | `--autopilot`, `/fleet` | 5 min |
 | 6 | Review & Sessions | `/review`, `/share` | 5 min |
+| 7 | **Safe & Secure CLI Usage** | IP protection, safe input patterns | 10 min |
 
 ---
 
@@ -316,6 +317,138 @@ copilot --continue
 - `/session` shows session summary and file access
 - `/share` exports the session to a readable Markdown file
 - `--continue` resumes the most recent session
+
+</details>
+
+---
+
+## Exercise 7: Safe & Secure CLI Usage
+
+**Goal**: Practice identifying safe vs unsafe CLI inputs and applying IP protection patterns.
+
+### Part A: Identify Safe vs Unsafe Inputs
+
+Review the following commands. For each, decide: **Safe ✅** or **Unsafe ❌**? Discuss with your group why.
+
+```powershell
+# 1
+copilot -p "How do I add CORS middleware in Express?"
+
+# 2
+copilot -p "$(cat .env)"
+
+# 3
+copilot -p "Explain why ECONNREFUSED happens on port 3000"
+
+# 4
+copilot -p "Why is internal-api.corp.contoso.com returning 503?"
+
+# 5
+copilot --autopilot --allow-all -p "fix all bugs in the production branch"
+
+# 6
+copilot -p "Write a Vitest test for a GET endpoint that returns 404 on missing ID"
+
+# 7
+copilot -p "$(cat ~/.ssh/id_rsa) explain this key format"
+```
+
+<details>
+<summary>✅ Answers</summary>
+
+| # | Verdict | Reason |
+|---|---------|--------|
+| 1 | ✅ Safe | Generic programming question, no proprietary info |
+| 2 | ❌ Unsafe | Pipes all environment secrets into the model |
+| 3 | ✅ Safe | Generic error question with no internal details |
+| 4 | ❌ Unsafe | Exposes internal hostname — use `example.com` instead |
+| 5 | ❌ Unsafe | Autopilot + allow-all on production = unreviewed destructive risk |
+| 6 | ✅ Safe | Generic test pattern, no proprietary code |
+| 7 | ❌ Unsafe | Sends private key to model — never do this |
+
+</details>
+
+### Part B: Apply Minimum Context Principle
+
+You want to ask Copilot CLI to help debug an internal service error. Practice rewriting unsafe prompts into safe ones.
+
+**Unsafe version:**
+```
+copilot -p "Our order-fulfillment-service at svc-orders.internal.corp.com:8443 
+is failing with auth token eyJhbGciOi... when calling the inventory microservice. 
+The internal Redis cluster at redis-prod-3.vpc.corp.com is timing out."
+```
+
+**Your task:** Rewrite this as a safe prompt that still gets useful help. Strip:
+- Internal hostnames and URLs
+- Auth tokens and credentials
+- Internal service names that reveal architecture
+
+<details>
+<summary>✅ Example Safe Rewrite</summary>
+
+```
+copilot -p "An HTTP service is failing when calling another internal microservice. 
+The auth token format is JWT. A Redis cache dependency is timing out. 
+What are common causes and debugging steps?"
+```
+
+Key changes:
+- Replaced specific hostnames with generic descriptions
+- Removed the actual token value
+- Described the pattern without naming internal systems
+
+</details>
+
+### Part C: Use Tool Restrictions
+
+Practice locking down CLI permissions for a sensitive task:
+
+```powershell
+# Allow only read operations and npm commands — deny writes and network
+copilot --allow-tool='read(api/src/**)' --allow-tool='shell(npm:*)' --deny-tool='write(**)' --deny-tool='shell(curl:*)' -i "analyze the API route structure"
+```
+
+Try creating your own restricted command for:
+1. Running tests only (no file writes, no git push)
+2. Reading documentation files only (no code access)
+
+<details>
+<summary>✅ Example Solutions</summary>
+
+```powershell
+# Tests only — allow npm test, deny file writes and git push
+copilot --allow-tool='shell(npm test:*)' --deny-tool='write(**)' --deny-tool='shell(git push:*)' -i "run all tests"
+
+# Docs only — read docs folder, deny everything else
+copilot --allow-tool='read(docs/**)' --deny-tool='write(**)' --deny-tool='shell(*)' -i "summarize the architecture docs"
+```
+
+</details>
+
+### Part D: Review Before Execute
+
+1. Run this in standard mode (not autopilot):
+
+```powershell
+copilot -i "clean up old branches and remove unused files in the api workspace"
+```
+
+2. When Copilot suggests commands, **DO NOT immediately confirm**. Instead:
+   - Read each suggested command carefully
+   - Check for destructive flags (`-rf`, `--force`, `--hard`)
+   - Verify the file paths are correct
+   - Only confirm if the command is safe
+
+3. Practice rejecting a suggestion by pressing **Ctrl+C** or typing "no, don't do that"
+
+<details>
+<summary>✅ Success Criteria</summary>
+
+- You correctly identified all unsafe inputs in Part A
+- You rewrote an unsafe prompt into a safe one (Part B)
+- You used `--deny-tool` to restrict CLI access (Part C)
+- You reviewed and rejected at least one suggestion before execution (Part D)
 
 </details>
 

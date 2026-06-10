@@ -23,7 +23,7 @@
 |---|-------|----------|--------|
 | 1 | Day 1 Recap & Setup Validation | 15 min | — |
 | 2 | Engineering Practices with Copilot | 60 min | — |
-| 3 | Copilot CLI | 60 min | [Lesson 4](04-copilot-cli/readme.md) |
+| 3 | Copilot CLI — Safe & Secure Usage | 60 min | [Lesson 4](04-copilot-cli/readme.md) |
 | 4 | Coding Agent (Introduction) | 60 min | [Lesson 5](05-coding-agent/readme.md) |
 | 5 | Copilot Spaces (Collaboration) | 60 min | — |
 | 6 | Spec-Driven Development & Advanced Agent Usage | 60 min | — |
@@ -172,11 +172,13 @@ Prompt engineering fundamentals. Context engineering techniques. Working effecti
 
 ---
 
-#### 3. Copilot CLI (60 min)
-Introduction to CLI capabilities. When to use CLI vs IDE. Spec-driven development concepts.
+#### 3. Copilot CLI — Safe & Secure Usage (60 min)
+Introduction to CLI capabilities. **Safe/secure usage of GHCP CLI and agent**: what to avoid, common gotchas, protecting proprietary IP, scoping queries to minimum context. What NOT to pipe into CLI (credentials, proprietary source, internal URLs). Reviewing CLI suggestions before execution.
 
 ➡️ **Hands-on (LBA):**
-- Execute Copilot CLI scenarios
+- Execute Copilot CLI scenarios safely
+- Identify safe vs unsafe CLI inputs (IP protection)
+- Review CLI output before execution
 - Try spec-driven workflows
 
 ---

@@ -26,18 +26,10 @@
 **Goal**: Use Ask mode to understand the project (codebase context is now built in automatically).
 
 1. Open Copilot Chat and select **Ask** mode
-2. Try these prompts:
+2. Try this prompt:
 
 ```
-Summarize architecture and tech stack
-```
-
-```
-List all API route files and their entities
-```
-
-```
-Show ERD: Orders → OrderDetails → Products
+Give me an overview about this project — summarize architecture, tech stack, list all API route files with their entities, and show ERD: Orders → OrderDetails → Products
 ```
 
 > **Prompt tip**: Short, keyword-rich prompts use fewer tokens and produce equally good results. Copilot already has codebase context — no need to repeat "this project" or ask full questions.

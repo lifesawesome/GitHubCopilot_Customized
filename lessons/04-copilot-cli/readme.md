@@ -201,7 +201,32 @@ Inside the interactive interface:
 
 ## Tool Permissions
 
-Copilot CLI has a granular permission system. Control which tools the agent can use:
+Copilot CLI uses tools to complete tasks: shell commands, file reads/writes, web search, and sub-agents. **Read-only operations are allowed automatically**, but tools that modify your system require explicit approval before Copilot can use them.
+
+If you haven't pre-granted permission, Copilot prompts you each time it needs to perform a potentially destructive action. You can allow it once, or for the entire session.
+
+### Two Layers of Control
+
+| Layer | Options | Purpose |
+|-------|---------|--------|
+| **Tool availability** | `--available-tools`, `--excluded-tools` | Restrict which tools the model can even *choose* from |
+| **Tool permission** | `--allow-tool`, `--deny-tool` | Allow or deny execution of specific tools |
+
+> **Deny rules always take precedence** over allow rules, even when `--allow-all` is set.
+
+### Restricting Tool Availability
+
+```powershell
+# Only allow shell and file read — model won't attempt anything else
+copilot --available-tools='shell, read_file'
+
+# Allow everything EXCEPT web access
+copilot --excluded-tools='web_fetch, web_search'
+```
+
+If a tool isn't in the available set, the model won't attempt to use it at all — preventing wasted interactions.
+
+### Allowing or Denying Permission
 
 ```powershell
 # Allow all git commands except git push
@@ -209,9 +234,25 @@ copilot --allow-tool='shell(git:*)' --deny-tool='shell(git push)'
 
 # Allow a specific MCP server tool
 copilot --allow-tool='MyMCP(create_issue)'
+
+# Allow file writes only in src/ — deny everywhere else
+copilot --allow-tool='write(src/**)' --deny-tool='write(**)'
 ```
 
 Permission patterns: `shell(command)`, `write(path)`, `read(path)`, `url(domain)`, `memory`.
+
+### Permissive Options
+
+| Option | Effect | Risk |
+|--------|--------|------|
+| `--allow-all` | Grants all tool permissions upfront | Agent can run any command without prompting |
+| `--autopilot` | Skips confirmation prompts | Combined with `--allow-all` = fully autonomous |
+
+⚠️ **Enterprise guidance**: Never combine `--allow-all` + `--autopilot` on repositories containing proprietary code.
+
+### Resetting Permissions
+
+Permissions granted during a session do not persist across sessions. Each new `copilot` invocation starts with a clean permission state (unless you pass `--allow-tool`/`--deny-tool` flags).
 
 ---
 
@@ -247,6 +288,85 @@ Settings cascade: **User** → **Repository** → **Local** (most specific wins)
 5. **Use `/context`** to monitor token usage in long sessions
 6. **Use `--resume`** to continue previous sessions
 7. **Use `/fleet`** to parallelize independent tasks
+
+---
+
+## Safe & Secure Usage of Copilot CLI
+
+> **This section addresses cybersecurity requirements** for enabling CLI usage in enterprise environments.
+
+### The 5 Security Rules for Copilot CLI
+
+#### 1. Lock Down Tool Permissions — Never Run Wide Open
+
+Use `--deny-tool` and `--excluded-tools` to restrict what the agent can do. **Deny rules always win**, even over `--allow-all`.
+
+```powershell
+# Enterprise-safe pattern: allow reads + npm, deny writes and network
+copilot --allow-tool='read(**)' --allow-tool='shell(npm:*)' --deny-tool='write(**)' --deny-tool='shell(curl:*)' --deny-tool='shell(git push:*)'
+
+# Remove web tools entirely from the model's choices
+copilot --excluded-tools='web_fetch, web_search'
+```
+
+⚠️ **Never** combine `--allow-all` + `--autopilot` on repos containing proprietary code.
+
+#### 2. Protect IP — Minimum Context, Maximum Safety
+
+| ❌ Never send to CLI | ✅ Safe alternative |
+|---------------------|---------------------|
+| `.env` files, secrets, tokens | Reference env var *names* only |
+| Internal hostnames/URLs | Use `example.com` placeholders |
+| Proprietary algorithms | Describe the pattern generically |
+| Private keys or certificates | No safe alternative — never do this |
+| Full production logs (may contain PII) | Sanitize before sharing |
+
+**Minimum context principle**: Give the CLI only what it needs. Don't pipe entire files — use snippets or descriptions.
+
+#### 3. Review Before Executing — Every Time
+
+Copilot CLI in Standard mode asks permission before destructive actions. **Always read suggestions before confirming:**
+
+```
+CLI suggests a command
+  → Check for: destructive flags (--force, -rf, DROP, DELETE)
+  → Check for: internal URLs or hardcoded values in output
+  → Verify file paths are correct
+  → Only then: confirm execution
+```
+
+Use `/diff` after changes to review what was modified before committing.
+
+#### 4. Don't Leak Architecture — Sanitize Everything
+
+| Gotcha | Risk | Prevention |
+|--------|------|------------|
+| Pasting full stack traces | Internal paths & service names leak | Sanitize internal references first |
+| Asking about internal APIs by name | Proprietary system names sent to model | Use generic descriptions instead |
+| Sharing sessions (`/share gist`) | Session may contain proprietary code | Only share sanitized content |
+| Running CLI in CI/CD pipelines | Prompts may be logged in build output | Avoid CLI in automated environments |
+
+**Replace before asking**: Swap internal terms with placeholders before prompting.
+
+#### 5. Use Standard Mode by Default — Autopilot is a Privilege
+
+| Mode | When to use | When NOT to use |
+|------|-------------|-----------------|
+| **Standard** | Sensitive repos, unfamiliar tasks, production code | — |
+| **Plan** | Complex multi-step changes that need review | — |
+| **Autopilot** | Non-sensitive, reversible tasks you fully trust | Proprietary code, prod branches, shared infra |
+
+Permissions reset each session — nothing persists across `copilot` invocations unless passed via flags.
+
+### Quick Reference Card
+
+| ✅ DO | ❌ DON'T |
+|--------|----------|
+| Use `--deny-tool` / `--excluded-tools` for sensitive work | Run `--allow-all --autopilot` on proprietary repos |
+| Scope prompts to minimum needed context | Pipe `.env`, keys, or full proprietary files |
+| Review every suggestion before confirming | Auto-execute without reading the command |
+| Replace internal names with generic placeholders | Reference internal hostnames/URLs/service names |
+| Use Standard mode for anything non-trivial | Default to Autopilot in production repos |
 
 ---
 
