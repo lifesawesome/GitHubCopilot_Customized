@@ -1,7 +1,7 @@
 ---
 name: 'add-error-handling'
 description: 'Add comprehensive error handling to Express route endpoints'
-mode: 'edit'
+agent: edit
 ---
 
 # Add Error Handling

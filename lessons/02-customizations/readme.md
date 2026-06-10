@@ -1,4 +1,4 @@
-# Lesson 2: Customization & Planning
+# Lesson 2: Customizations
 
 ## Overview
 
@@ -100,8 +100,7 @@ applyTo: '**/*.ts'
 | `express.instructions.md` | `api/**/*.ts` | Swagger docs, CRUD pattern, HTTP status codes, model conventions |
 | `react.instructions.md` | `**/*.tsx` | Functional components, Tailwind, props interfaces |
 | `python.instructions.md` | `**/*.py` | PEP 8, type hints, docstrings |
-| `testing.instructions.md` | `**/*.test.ts` | Vitest/Supertest, coverage requirements |
-
+| `testing.instructions.md` | `**/*.test.ts` | Vitest/Supertest, coverage requirements || `security.instructions.md` | `**/*` | No secrets, no IP leakage, CLI safety, agent guardrails, dependency governance |
 ### Demo: File-Specific Rules
 
 1. Open `api/src/routes/product.ts` — Copilot loads API route instructions
@@ -135,8 +134,10 @@ mode: 'ask|edit|agent'
 | `summarize-code` | ask | 3-6 bullet summary |
 | `add-comments` | ask | Add JSDoc/inline comments |
 | `review-api-route` | ask | Comprehensive route review |
-| `security-review` | ask | Security vulnerability scan |
-| `add-swagger-docs` | agent | Generate Swagger annotations |
+| `security-review` | ask | Security vulnerability scan || `cli-safety-guide` | ask | Safe Copilot CLI usage patterns |
+| `pre-commit-security-check` | ask | Pre-commit IP/secrets check |
+| `copilot-agent-review-checklist` | ask | Agent PR review checklist |
+| `security-review-agent-output` | agent | Review agent code for security violations || `add-swagger-docs` | agent | Generate Swagger annotations |
 | `refactor-component` | agent | Refactor React components |
 | `add-tao-observability` | agent | Add TAO instrumentation |
 | `generate-api-route` | agent | Scaffold complete new route |
@@ -179,6 +180,7 @@ model: Claude Sonnet 4.6 (copilot)
 | `API Reviewer` | Route quality, Swagger, security review |
 | `Frontend Designer` | React + Tailwind component design |
 | `Test Coverage` | Coverage analysis + test generation |
+| `Security Guardian` | IP protection, secrets detection, dependency governance |
 
 ### Demo: Using a Custom Agent
 
@@ -208,8 +210,7 @@ skills/
 |-------|---------|---------|
 | `api-analysis` | 3 Python scripts | Route listing, Swagger coverage, test coverage |
 | `codebase-health` | 3 Python scripts | Dependencies, security patterns, complexity |
-| `frontend-design` | SKILL.md only | Design guidelines for UI generation |
-
+| `frontend-design` | SKILL.md only | Design guidelines for UI generation || `security-audit` | 3 Python scripts | Secret scanning, license checking, internal reference detection |
 ### Demo: Running a Skill Script
 
 ```powershell
@@ -237,6 +238,71 @@ A structured approach to complex changes:
 
 ---
 
+## 7. Security Governance with Customizations
+
+Customizations aren't just about coding faster — they're a **governance mechanism** for protecting proprietary information and enforcing secure practices across the team.
+
+### How Security Customizations Work Together
+
+```
+security.instructions.md (applyTo: **/*)
+  → Always active — Copilot follows security rules in every interaction
+  → Blocks secrets, internal references, unsafe patterns
+
+@Security Guardian (agent)
+  → On-demand comprehensive security review
+  → Reviews for IP leakage, secrets, license violations
+
+cli-safety-guide (prompt, ask mode)
+  → Educational — teaches safe Copilot CLI usage
+
+pre-commit-security-check (prompt, ask mode)
+  → Run before committing — catches secrets/IP in staged changes
+
+security-review-agent-output (prompt, agent mode)
+  → Run before merging agent PRs — validates agent code is safe
+
+copilot-agent-review-checklist (prompt, ask mode)
+  → Comprehensive agent PR review: quality + security + scope
+
+security-audit (skill)
+  → Automated Python scripts for scanning the whole repo
+```
+
+### Demo: Security Governance in Action
+
+1. **Global instruction enforcement**: Open any file → Copilot automatically avoids suggesting hardcoded secrets or internal URLs (because `security.instructions.md` applies to `**/*`)
+
+2. **Security agent review**: In Copilot Chat:
+   ```
+   @Security Guardian Review the product route for IP leakage and secrets
+   ```
+
+3. **Pre-commit check**: Before pushing, run the prompt:
+   ```
+   Command Palette → Prompts: Run Prompt → pre-commit-security-check
+   ```
+
+4. **Audit scripts**: Run from terminal:
+   ```powershell
+   python .github/skills/security-audit/scan_secrets.py .
+   python .github/skills/security-audit/check_dependencies_license.py .
+   python .github/skills/security-audit/scan_internal_references.py .
+   ```
+
+### Key Security Principles for Copilot Usage
+
+| Area | Rule | Enforced By |
+|------|------|-------------|
+| Secrets | Never hardcode tokens/keys | `security.instructions.md` |
+| IP Protection | No internal URLs/hostnames in code | `security.instructions.md` + `scan_internal_references.py` |
+| Agent PRs | Always review before merge | `copilot-agent-review-checklist` prompt |
+| CLI | Don't pipe secrets/proprietary code | `cli-safety-guide` prompt |
+| Dependencies | Verify license + no vulns | `check_dependencies_license.py` |
+| Logging | No PII or tokens in logs | `security.instructions.md` |
+
+---
+
 ## Summary
 
 | Customization | Scope | When Applied |
@@ -252,4 +318,4 @@ A structured approach to complex changes:
 ## Next Steps
 
 - [Hands-on Exercises](hands-on-exercises.md) — Create your own customization files
-- [Lesson 3: Copilot CLI](../03-copilot-cli/readme.md) — Terminal-based AI assistance
+- [Lesson 3: Secure Usage of GitHub Copilot](../03-security/readme.md) — Security governance for Copilot

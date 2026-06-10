@@ -1,4 +1,4 @@
-# Lesson 5: MCP Servers & Extensions
+# Lesson 6: MCP Servers & Extensions
 
 ## Overview
 

@@ -1,4 +1,4 @@
-# Lesson 3: Copilot CLI
+# Lesson 4: Copilot CLI
 
 ## Overview
 
@@ -268,4 +268,4 @@ Settings cascade: **User** → **Repository** → **Local** (most specific wins)
 ## Next Steps
 
 - [Hands-on Exercises](hands-on-exercises.md) — Practice CLI workflows
-- [Lesson 4: Coding Agent](../04-coding-agent/readme.md) — Autonomous task execution
+- [Lesson 5: Coding Agent](../05-coding-agent/readme.md) — Autonomous task execution

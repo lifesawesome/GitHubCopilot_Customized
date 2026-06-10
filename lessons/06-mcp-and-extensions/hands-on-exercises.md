@@ -1,4 +1,4 @@
-# Lesson 5: Hands-On Exercises
+# Lesson 6: Hands-On Exercises
 
 ## Exercise Overview
 

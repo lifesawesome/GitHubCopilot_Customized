@@ -147,4 +147,4 @@ Switch models in Chat using the model selector dropdown.
 ## Next Steps
 
 - [Hands-on Exercises](hands-on-exercises.md) — Practice with the OctoCAT codebase
-- [Lesson 2: Customization & Planning](../02-planning/readme.md) — Make Copilot work your way
+- [Lesson 2: Customizations](../02-customizations/readme.md) — Make Copilot work your way

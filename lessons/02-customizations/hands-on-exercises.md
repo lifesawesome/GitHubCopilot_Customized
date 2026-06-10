@@ -8,7 +8,7 @@
 | 2 | See Instructions in Action | Observe behavior | 5 min |
 | 3 | Create a Custom Prompt | Write prompt file | 10 min |
 | 4 | Create a Custom Agent | Write agent file | 10 min |
-| 5 | Explore More Instruction Patterns | Global vs scoped | 10 min |
+| 5 | Security Governance with Copilot | Security customizations | 10 min |
 | 6 | Use Plan Mode | Plan a feature | 10 min |
 
 ---
@@ -231,72 +231,83 @@ You identify vulnerabilities without making code changes — report only.
 
 ---
 
-## Exercise 5: Explore More Instruction Patterns
+## Exercise 5: Security Governance with Copilot
 
-**Goal**: Understand the difference between global instructions, file-scoped instructions, and how to write new ones.
+**Goal**: Understand how customizations enforce security policies — protecting IP, preventing secret leakage, and governing Copilot agent/CLI usage.
 
-### The Customization Hierarchy
+### A) Explore the Security Instruction File
 
+1. Open `.github/instructions/security.instructions.md`
+2. Note: `applyTo: '**/*'` — this applies to **every file** in the repo
+3. Read through the sections: secrets, IP leakage, CLI safety, agent guardrails, dependency governance
+4. Note the "Internal Terms Blocklist" section — organizations customize this with their own terms
+
+**Question**: Why is `applyTo: '**/*'` used for security but `api/**/*.ts` for Express rules?
+
+<details>
+<summary>✅ Answer</summary>
+
+Security rules are universal — secrets and IP leakage can happen in any file (TypeScript, Python, YAML, Markdown). Express conventions only apply to API TypeScript files. The `applyTo` pattern controls scope precisely.
+
+</details>
+
+### B) Use the Security Guardian Agent
+
+1. Open the agent picker in Copilot Chat
+2. Select **Security Guardian**
+3. Ask:
+   ```
+   Review #file:api/src/routes/product.ts for security issues including IP leakage and secrets
+   ```
+4. Observe the structured compliance report output with severity ratings
+
+### C) Run the Pre-Commit Security Check
+
+1. Open Command Palette → **Prompts: Run Prompt → pre-commit-security-check**
+2. Review the output — does it find any issues in the current codebase?
+3. Now temporarily add a fake secret to any file:
+   ```typescript
+   const API_KEY = "sk-1234567890abcdef1234567890abcdef1234567890abcdef";
+   ```
+4. Run the prompt again — observe it catches the hardcoded secret
+5. **Remove the fake secret** immediately!
+
+### D) Run the Security Audit Scripts
+
+```powershell
+# Scan for hardcoded secrets
+python .github/skills/security-audit/scan_secrets.py .
+
+# Check dependency licenses
+python .github/skills/security-audit/check_dependencies_license.py .
+
+# Scan for internal references
+python .github/skills/security-audit/scan_internal_references.py .
 ```
-copilot-instructions.md          ← Always active (every chat)
-    └── instructions/*.instructions.md   ← Active only when applyTo pattern matches
-            └── prompts/*.prompt.md      ← Active only when explicitly run
-                    └── agents/*.agent.md  ← Active only when agent is selected
-```
 
-### A) Compare global vs. file-scoped behavior
+### E) Understand Copilot CLI Safety
 
-1. Open `api/src/routes/branch.ts` in the editor
-2. In **Edit** mode, ask:
-   ```
-   Add managerEmail field to this route
-   ```
-   Notice: Copilot uses `{ error: string }` shapes, Swagger JSDoc, and 404 patterns automatically — because `express.instructions.md` applies to `api/**/*.ts`.
+1. Open Command Palette → **Prompts: Run Prompt → cli-safety-guide**
+2. Read the output — understand what's safe vs unsafe to pipe into `gh copilot explain/suggest`
+3. Key takeaways:
+   - ✅ Safe: Generic programming questions, public tool usage, sanitized errors
+   - ❌ Unsafe: `.env` files, private keys, proprietary source code, internal URLs
 
-3. Now open `api/src/seedData.ts` and ask the same question.
-   Notice: Copilot still follows the instruction since `seedData.ts` matches `api/**/*.ts`. This is fine — the instruction covers the whole API workspace.
+### F) Review Agent PR Checklist
 
-### B) Read the express instruction
-
-1. Open `.github/instructions/express.instructions.md` — note its `applyTo: 'api/**/*.ts'` target covers routes, models, and all API source
-2. Open `api/src/models/supplier.ts` in the editor
-3. In **Edit** mode ask:
-   ```
-   Add country field to Supplier
-   ```
-   Copilot will add the field to both the TypeScript interface AND the Swagger schema, include a FK-style description, and mark optional fields with `?` — all because the express instruction covers model conventions too.
-
-### C) Write your own file-scoped instruction
-
-1. Create `.github/instructions/seeddata.instructions.md`:
-
-```markdown
----
-applyTo: '**/seedData.ts'
----
-
-# Seed Data Instructions
-
-- Keep seed data realistic but clearly fictional (cat-themed names, addresses, etc.)
-- Every seed array must have at least 3 entries
-- IDs must start at 1 and be sequential with no gaps
-- Do NOT add `Date.now()` or random values — seed data must be deterministic
-- When adding a new entity, export it as `export const <plural>: <Type>[] = [...]`
-```
-
-2. Open `api/src/seedData.ts` and ask:
-   ```
-   Add 2 more suppliers with cat-themed names
-   ```
-   Copilot will use cat-themed names, sequential IDs, and deterministic data — because the instruction now applies.
+1. Open Command Palette → **Prompts: Run Prompt → copilot-agent-review-checklist**
+2. This checklist should be used every time a Copilot coding agent creates a PR
+3. Key review areas: scope creep, security, testing, code quality, dependency governance
 
 <details>
 <summary>✅ Success Criteria</summary>
 
-- `express.instructions.md` behavior IS triggered on all `api/**/*.ts` files including seedData
-- Express instruction causes Copilot to update both TS interface AND Swagger schema for models
-- New `seeddata.instructions.md` makes Copilot use cat-themed, deterministic seed data
-- You can see the `applyTo` pattern is the key difference
+- Security instruction loads for ALL files (because `applyTo: '**/*'`)
+- Security Guardian agent produces a structured compliance report
+- Pre-commit check catches hardcoded secrets
+- Audit scripts run and produce readable output
+- You understand the difference between always-active instructions vs on-demand prompts
+- You know when to use each security artifact (instruction vs agent vs prompt vs skill)
 
 </details>
 
@@ -359,8 +370,8 @@ In this lesson you:
 - ✅ Observed file-specific instructions changing behavior
 - ✅ Created a custom prompt file (`add-input-validation`)
 - ✅ Created a custom agent persona (`Security-Reviewer`)
-- ✅ Compared global vs. scoped instruction behavior
-- ✅ Wrote your own file-scoped instruction
+- ✅ Explored security governance customizations (instructions, agent, prompts, skill)
+- ✅ Ran security audit scripts to scan the codebase
 - ✅ Used Plan mode for feature design
 
-**Next**: [Lesson 3 — Copilot CLI](../03-copilot-cli/readme.md)
+**Next**: [Lesson 3 — Secure Usage of GitHub Copilot](../03-security/readme.md)

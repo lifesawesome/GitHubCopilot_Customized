@@ -120,3 +120,39 @@ Swagger UI is served at `/api-docs`.
 - [ ] Tailwind classes used (no inline styles)
 - [ ] Tests added for new routes/components
 - [ ] `reset*()` export added for testability
+
+---
+
+## Security & Governance
+
+Security rules are enforced globally via `.github/instructions/security.instructions.md` (applies to all files). Key guardrails:
+
+### Copilot Agent Safety
+- **Never auto-merge** agent-generated PRs — always require human review
+- Review agent PRs using the `copilot-agent-review-checklist` prompt
+- Use `security-review-agent-output` prompt before merging any agent PR
+- Agent-modified security-sensitive files (auth, CORS, env) require additional reviewer
+
+### Copilot CLI Safety
+- Never pipe `.env`, private keys, or proprietary source into `gh copilot explain/suggest`
+- Scope CLI queries to minimum context — use snippets, not full files
+- Review all `gh copilot suggest` output before execution
+- See the `cli-safety-guide` prompt for comprehensive guidance
+
+### IP & Secrets Protection
+- No hardcoded secrets, tokens, or credentials in any file
+- No internal hostnames, private URLs, or proprietary terms in code/comments
+- No PII in logs, seed data, or test fixtures
+- Use `pre-commit-security-check` prompt before committing sensitive changes
+- Run security audit scripts: `python .github/skills/security-audit/scan_secrets.py .`
+
+### Dependency Governance
+- Verify license compatibility before adding dependencies (MIT/Apache/BSD = safe)
+- No dependencies with known critical vulnerabilities
+- Pin versions — avoid `*` or `latest`
+- Check with: `python .github/skills/security-audit/check_dependencies_license.py .`
+
+### Security Agent & Skill
+- Use `@Security Guardian` agent for comprehensive security reviews
+- The `security-audit` skill provides automated scanning scripts
+- The existing `security-review` prompt covers OWASP vulnerability categories

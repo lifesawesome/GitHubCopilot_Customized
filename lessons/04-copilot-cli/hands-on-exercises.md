@@ -1,4 +1,4 @@
-# Lesson 3: Hands-On Exercises
+# Lesson 4: Hands-On Exercises
 
 ## Exercise Overview
 
@@ -366,4 +366,4 @@ In this lesson you practiced:
 - ✅ Tool permissions with `--allow-tool` / `--deny-tool`
 - ✅ Debugging common development errors
 
-**Next**: [Lesson 4 — Coding Agent](../04-coding-agent/readme.md)
+**Next**: [Lesson 5 — Coding Agent](../05-coding-agent/readme.md)

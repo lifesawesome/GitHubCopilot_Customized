@@ -1,4 +1,4 @@
-# Lesson 4: Hands-On Exercises
+# Lesson 5: Hands-On Exercises
 
 ## Exercise Overview
 
@@ -215,4 +215,4 @@ In this lesson you:
 - ✅ Iterated with follow-up tasks
 - ✅ Observed how custom instructions influence agent output
 
-**Next**: [Lesson 5 — MCP Servers & Extensions](../05-mcp-and-extensions/readme.md)
+**Next**: [Lesson 6 — MCP Servers & Extensions](../06-mcp-and-extensions/readme.md)

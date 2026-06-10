@@ -193,4 +193,4 @@ In this lesson you practiced:
 - ✅ **Slash commands** (`/explain`, `/doc`)
 - ✅ **Chat participants** (`@terminal`, `@github`, `@vscode`)
 
-**Next**: [Lesson 2 — Customization & Planning](../02-planning/readme.md)
+**Next**: [Lesson 2 — Customizations](../02-customizations/readme.md)

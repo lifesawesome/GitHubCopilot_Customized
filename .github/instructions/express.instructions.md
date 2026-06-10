@@ -1,4 +1,6 @@
 ---
+name: 'Express API Standards'
+description: 'Route structure, Swagger docs, HTTP status codes, and conventions for the Express API'
 applyTo: 'api/**/*.ts'
 ---
 
