@@ -48,7 +48,7 @@ Open `api/src/routes/supplier.ts`, then in **Edit** mode ask:
 ```
 Add search-by-name route with Swagger
 ```
-Copilot automatically adds a Swagger JSDoc block, returns `{ error: 'Supplier not found' }` (not a plain string), and uses status 404 — because `.github/instructions/express.instructions.md` applies to every file matching `api/**/*.ts`.
+Copilot automatically adds a Swagger JSDoc block, returns `{ error: 'Supplier not found' }` (not a plain string), and uses status 404 or 400 construct — because `.github/instructions/express.instructions.md` applies to every file matching `api/**/*.ts`.
 
 ### 2. Global instructions — `copilot-instructions.md` + TAO
 

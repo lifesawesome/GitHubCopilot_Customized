@@ -23,10 +23,10 @@ Not everything happens in VS Code. When you're in the terminal — deploying, de
 
 ```powershell
 # Windows (winget)
-winget install GitHub.copilot-cli
+winget install GitHub.Copilot
 
 # macOS (Homebrew)
-brew install gh-copilot
+brew install copilot-cli
 
 # Or update an existing installation
 copilot update
