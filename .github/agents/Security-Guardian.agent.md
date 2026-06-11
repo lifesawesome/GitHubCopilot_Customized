@@ -1,7 +1,7 @@
 ---
 name: Security Guardian
 description: Review code for security vulnerabilities, IP leakage, secrets exposure, and governance compliance
-tools: ['search', 'codebase', 'usages']
+tools: ['search']
 model: Claude Sonnet 4.6 (copilot)
 ---
 

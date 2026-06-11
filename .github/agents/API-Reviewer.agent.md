@@ -1,7 +1,7 @@
 ---
 name: API Reviewer
 description: Review Express API routes for quality, Swagger completeness, security, and test coverage
-tools: ['search', 'codebase', 'usages']
+tools: ['search']
 model: Claude Sonnet 4.6 (copilot)
 ---
 

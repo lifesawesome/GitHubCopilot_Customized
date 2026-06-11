@@ -88,6 +88,30 @@ Run shell commands directly without leaving Copilot:
 ! npm test --workspace=api
 ```
 
+### Working Directory & Trusted Directories
+
+When you launch `copilot`, it asks you to confirm that you **trust** the files in the current folder. Copilot may read, modify, and execute files in and below that directory.
+
+| Option | Meaning |
+|--------|---------|
+| **Yes, proceed** | Trust this folder for the current session only |
+| **Yes, and remember** | Trust this folder permanently (future sessions too) |
+| **No, exit (Esc)** | End the session |
+
+> **Security note**: Only remember a folder if you are certain it will always be safe for Copilot to execute code there.
+
+**Adding trusted directories mid-session:**
+
+```
+/add-dir /path/to/directory
+```
+
+**Switching working directory without restarting:**
+
+```
+/cwd /path/to/directory
+```
+
 ---
 
 ## Slash Commands
@@ -97,7 +121,7 @@ Slash commands control the CLI from within the interactive interface:
 | Command | Purpose |
 |---------|---------|
 | `/plan [PROMPT]` | Create an implementation plan before coding |
-| `/delegate [PROMPT]` | Delegate changes to a remote repo via AI-generated PR |
+| `/delegate [PROMPT]` | Delegate changes to Copilot cloud agent (opens a draft PR) |
 | `/fleet [PROMPT]` | Run parts of a task in parallel via subagents |
 | `/review [PROMPT]` | Run the code review agent to analyze changes |
 | `/diff` | Review changes made in the current directory |
@@ -105,13 +129,53 @@ Slash commands control the CLI from within the interactive interface:
 | `/agent` | Browse and select from available agents |
 | `/mcp [show\|add\|edit\|delete]` | Manage MCP server configuration |
 | `/context` | Show context window token usage |
-| `/compact` | Summarize conversation to reduce token usage |
+| `/compact` | Manually compress conversation history to free context space |
+| `/usage` | View session stats: AI credits used, duration, lines edited, token breakdown |
 | `/session` | Show session info and workspace summary |
 | `/share [file\|gist]` | Share session to a Markdown file or GitHub gist |
+| `/resume` | Select and resume a previous interactive session |
 | `/clear` | Clear conversation history |
+| `/add-dir PATH` | Add a trusted directory for the current session |
+| `/cwd PATH` | Change current working directory without restarting |
+| `/every INTERVAL PROMPT` | Schedule a prompt to run repeatedly (e.g., `/every 1h run tests`) |
+| `/after DELAY PROMPT` | Schedule a one-shot prompt to run after a delay |
+| `/undo` / `/rewind` | Open the rewind picker to roll back to a previous snapshot |
+| `/tasks` | View and manage background subagent tasks (used with `/fleet`) |
+| `/chronicle [SUBCOMMAND]` | Session insights: standup, tips, cost tips, search, improve, reindex |
+| `/rename NAME` | Rename the current session for easier retrieval |
+| `/allow-all` / `/yolo` | Allow all tool permissions for the rest of this session |
+| `/reset-allowed-tools` | Revoke all permissions granted during this session |
+| `/sandbox [enable\|disable]` | Toggle local sandbox to restrict filesystem/network access |
+| `/feedback` | Submit feedback, bug report, or feature request |
+| `/login` | Authenticate with GitHub |
 | `/exit` | Exit the CLI |
 
-For a full list, type `/help` in the interactive interface.
+For a full list, type `?` in the prompt box or run `copilot help` in your terminal.
+
+---
+
+## Built-in Custom Agents
+
+Copilot CLI ships with a default set of specialized agents you can invoke via `/agent` or by name in a prompt. The AI model may also delegate to these automatically.
+
+| Agent | Purpose |
+|-------|---------|
+| **Explore** | Quick codebase analysis — ask questions without affecting your main context |
+| **Task** | Executes commands (tests, builds) — brief summaries on success, full output on failure |
+| **General purpose** | Complex multi-step tasks requiring the full toolset and high-quality reasoning |
+| **Code review** | Reviews changes with a focus on genuine issues, minimizing noise |
+| **Research** | Deep research across codebase, related repos, and the web — produces a cited report |
+| **Rubber duck** | Constructive critic for complex tasks — consulted automatically by Copilot |
+
+**Invoking an agent:**
+
+```
+/agent                                      # Browse and select from the list
+Use the code review agent to check my PR   # Copilot infers the agent
+copilot --agent=explore -p "How does auth work in this repo?"  # CLI flag
+```
+
+**Custom agents** can be defined at user (`~/.copilot/agents/`), repository (`.github/agents/`), or org (`.github-private/agents/`) level using Markdown profile files.
 
 ---
 
@@ -177,6 +241,213 @@ Inside the interactive interface:
 
 ```
 /fleet run linting on frontend and API tests simultaneously
+```
+
+---
+
+## Speeding Up Tasks with `/fleet`
+
+Where a task involves multiple operations that can be worked on in parallel, `/fleet` assigns separate parts of the work to subagents — reducing wall-clock time for complex implementations.
+
+### Typical Workflow
+
+1. Press **Shift+Tab** to enter **plan mode**
+2. Describe the feature or change you want to make
+3. Collaborate with Copilot to refine the implementation plan
+4. Choose one of the two options Copilot presents:
+
+   | Option | Behavior |
+   |--------|----------|
+   | **Accept plan and build on autopilot + /fleet** | Copilot implements the plan fully autonomously using subagents |
+   | **Exit plan mode and prompt myself** | Enter `/fleet implement the plan` manually — Copilot still uses subagents but may ask you questions as it works |
+
+### Monitoring Parallel Tasks
+
+Use `/tasks` to see all background subagent tasks in the current session:
+
+| Key | Action |
+|-----|--------|
+| `↑` / `↓` | Navigate the task list |
+| `Enter` | View details / completion summary for a subtask |
+| `k` | Kill the subtask process |
+| `r` | Remove completed or killed tasks from the list |
+| `Esc` | Return to the main CLI prompt |
+
+---
+
+## Session Data & `/chronicle`
+
+Copilot CLI stores session data locally and syncs it to your GitHub account. This enables session resumption and a set of insight commands via `/chronicle`.
+
+### Resuming Sessions
+
+```powershell
+copilot --continue          # Resume the most recent session
+copilot --resume            # Open a picker to choose a recent session
+copilot --resume SESSION-ID # Jump directly to a specific session
+```
+
+Within an interactive session:
+
+```
+/resume                     # Open the session picker
+/resume SESSION-ID          # Jump to a specific session
+/session                    # Show the current session ID and workspace summary
+/rename My Feature Work     # Rename the current session for easier retrieval
+```
+
+### Sharing a Session
+
+```
+/share gist                 # Save session as a private GitHub gist
+/share file                 # Save as copilot-session-SESSIONID.md in cwd
+/share file path/to/out.md  # Save to a specific file
+```
+
+### The `/chronicle` Slash Command
+
+Type `/chronicle` to open a picker, or invoke subcommands directly:
+
+| Subcommand | Purpose |
+|------------|--------|
+| `/chronicle standup` | Standup report from your sessions in the last 24 hours — branches worked, accomplishments, linked PRs/issues |
+| `/chronicle tips` | 3–5 personalized tips based on your actual usage patterns and features you haven't tried |
+| `/chronicle cost tips` | Token spend analysis — where credits go and how to reduce costs |
+| `/chronicle search KEYWORD` | Full-text search across all session content |
+| `/chronicle improve` | Suggests improvements to `.github/copilot-instructions.md` based on where Copilot struggled in your sessions |
+| `/chronicle reindex` | Rebuild the local session store and sync to your account |
+
+**Customizing chronicle output:**
+
+```
+/chronicle standup for the last 3 days
+/chronicle tips for better prompting
+```
+
+**`/chronicle improve`** is scoped to the current repository — it finds friction signals (repeated failures, redirected prompts, mismatched tool choices) and proposes specific instructions. After reviewing the suggestions, press `Space` to toggle individual ones and `Enter` to apply them — Copilot will create or update `.github/copilot-instructions.md`.
+
+### Asking Free-Form Questions About Your History
+
+You can ask Copilot directly — it will automatically query your session store:
+
+```
+Have I worked on anything related to authentication in the last month?
+What time of day am I most effective at getting good results from Copilot?
+Based on my previous CLI sessions, how could I prompt you in a way that costs less?
+```
+
+---
+
+## Browsing Issues, Pull Requests & Gists
+
+The interactive TUI has four tabs at the top. Press **Tab** / **Shift+Tab** to switch between them.
+
+| Tab | Content |
+|-----|---------|
+| **Session** | Regular chat experience |
+| **Issues** | Open issues in the current GitHub repository that involve you |
+| **Pull requests** | Open PRs in the current repository that involve you |
+| **Gists** | Your gists (public and secret) — always available regardless of directory |
+
+> The Issues and Pull requests tabs only appear when running inside a GitHub repository.
+
+**Common keyboard controls in Issues / PRs / Gists:**
+
+| Key | Action |
+|-----|--------|
+| `↑` / `↓` (or `j`/`k`) | Highlight next/previous item |
+| `←` / `→` (or `h`/`l`) | Navigate between pages |
+| `Enter` | Open detail view for highlighted item |
+| `Esc` | Return from detail view to list |
+| `o` | Open item in browser |
+| `c` | Insert reference into the Session prompt box |
+| `a` | Toggle between "involves me" and all open items |
+
+**Pulling an item into chat:**
+
+```
+# Press 'c' on issue #1234 to insert it, then type:
+#1234 suggest a fix for this bug
+
+# Press 'c' on PR #5678:
+#5678 check this out and run tests
+```
+
+The tabs are **read-only** — use `c` to let Copilot act on an item, or `o` to open it in the browser.
+
+---
+
+## Delegating Tasks to Copilot
+
+Two options for autonomous execution:
+
+| Mode | Where work happens | How to trigger |
+|------|--------------------|----------------|
+| **Autopilot** | Locally, in your CLI session | `Shift+Tab` to autopilot mode, or `--autopilot` flag |
+| **Cloud Agent (`/delegate`)** | Remotely on GitHub (creates branch + draft PR) | `/delegate PROMPT` or prefix prompt with `&` |
+
+### Autopilot (local)
+
+```powershell
+# Fully autonomous, max 10 steps, full permissions
+copilot --autopilot --yolo --max-autopilot-continues 10 -p "YOUR PROMPT HERE"
+```
+
+### Cloud Agent (remote)
+
+```
+/delegate complete the API integration tests and fix any failing edge cases
+```
+
+or equivalently:
+
+```
+& complete the API integration tests and fix any failing edge cases
+```
+
+Copilot will commit any unstaged changes as a checkpoint, create a branch, open a **draft PR**, and work in the background. Use this when you want to hand off a task and continue working (or shut down your machine) while Copilot finishes.
+
+---
+
+## Scheduling Prompts
+
+Run prompts automatically in the future — useful for recurring checks or deferred tasks.
+
+```
+# Run every hour — recurring
+/every 1h Run frontend tests and report any failures
+
+# Run once after 30 minutes — one-shot
+/after 30m Create a summary of today's commits
+```
+
+---
+
+## Rolling Back Changes
+
+Copilot CLI takes a **snapshot** of your workspace at the start of each prompt. If the result isn't what you expected, you can rewind.
+
+**Prerequisites**: Must be in a Git repository with at least one commit.
+
+### Triggering a Rewind
+
+| Method | How |
+|--------|-----|
+| **Double Esc** | Press `Esc` twice when input is empty and Copilot is idle |
+| **Slash command** | `/undo` or `/rewind` |
+
+Both open the **rewind picker** — a list of the 10 most recent snapshots (most recent first), showing the beginning of each prompt and when it was submitted.
+
+> **Warning**: Rewinding is permanent and cannot be undone. All snapshots and session history *after* the selected point are removed. New files created after the snapshot are deleted regardless of Git status.
+
+### Verifying After Rollback
+
+Use `!` to run shell commands from within the CLI session:
+
+```
+! git status          # Check modified/staged/untracked files
+! git log --oneline -1  # Confirm current commit
+! git diff            # Review unstaged changes
 ```
 
 ---
@@ -252,7 +523,9 @@ Permission patterns: `shell(command)`, `write(path)`, `read(path)`, `url(domain)
 
 ### Resetting Permissions
 
-Permissions granted during a session do not persist across sessions. Each new `copilot` invocation starts with a clean permission state (unless you pass `--allow-tool`/`--deny-tool` flags).
+The `/reset-allowed-tools` slash command revokes all permissions you granted during the current interactive session — including those given in response to prompts and via `/allow-all` or `/yolo`. Permissions reset to the state defined by any `--allow-tool`/`--deny-tool` flags you passed at startup.
+
+Permissions do **not** automatically persist across sessions — each new `copilot` invocation starts clean unless you pass permission flags at startup.
 
 ---
 
@@ -288,6 +561,8 @@ Settings cascade: **User** → **Repository** → **Local** (most specific wins)
 5. **Use `/context`** to monitor token usage in long sessions
 6. **Use `--resume`** to continue previous sessions
 7. **Use `/fleet`** to parallelize independent tasks
+8. **Use `/chronicle standup`** to generate a daily summary of your work
+9. **Use `/chronicle improve`** to auto-update `.github/copilot-instructions.md` from session friction signals
 
 ---
 

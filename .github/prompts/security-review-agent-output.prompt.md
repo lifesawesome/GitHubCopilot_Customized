@@ -1,7 +1,7 @@
 ---
 name: 'security-review-agent-output'
 description: 'Review Copilot coding agent PR output for security violations, scope creep, and governance compliance before merge'
-mode: 'agent'
+agent: 'agent'
 ---
 
 # Security Review: Copilot Agent Output

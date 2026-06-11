@@ -99,6 +99,12 @@ project-codename-phoenix
 3. Observe: Copilot suggests using environment variables, not hardcoded values
 4. Try asking Copilot to add a comment with an internal URL — it should avoid generating one
 
+> **Try it now:** Open `api/src/routes/order.ts` and ask Copilot:
+> ```
+> add the API key value
+> ```
+> Copilot should refuse to hardcode the value and instead suggest reading it from an environment variable, demonstrating the security instruction in action.
+
 ---
 
 ## 3. Security Guardian Agent

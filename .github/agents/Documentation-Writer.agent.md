@@ -1,7 +1,7 @@
 ---
 name: Documentation Writer
 description: Generate and update project documentation, Swagger docs, and README files
-tools: ['search', 'codebase', 'editFiles']
+tools: ['search', 'edit']
 model: Claude Sonnet 4.6 (copilot)
 ---
 

@@ -1,7 +1,7 @@
 ---
 name: 'pre-commit-security-check'
 description: 'Pre-commit checklist to verify no secrets, IP leakage, or security violations in staged changes'
-mode: 'ask'
+agent: 'ask'
 ---
 
 # Pre-Commit Security Check

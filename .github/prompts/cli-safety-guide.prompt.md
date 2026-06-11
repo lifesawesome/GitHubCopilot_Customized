@@ -1,7 +1,7 @@
 ---
 name: 'cli-safety-guide'
 description: 'Safe usage patterns for GitHub Copilot CLI — what to do, what to avoid, and how to protect proprietary information'
-mode: 'ask'
+agent: 'ask'
 ---
 
 # GitHub Copilot CLI Safety Guide

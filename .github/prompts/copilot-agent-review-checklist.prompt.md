@@ -1,7 +1,7 @@
 ---
 name: 'copilot-agent-review-checklist'
 description: 'Comprehensive checklist for reviewing GitHub Copilot coding agent PRs — covers quality, security, scope, tests, and governance'
-mode: 'ask'
+agent: 'ask'
 ---
 
 # Copilot Agent PR Review Checklist
