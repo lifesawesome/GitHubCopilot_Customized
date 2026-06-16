@@ -11,6 +11,7 @@ import { CartProvider } from './context/CartContext';
 import Cart from './components/Cart';
 import AdminProducts from './components/admin/AdminProducts';
 import PythonAnalyticsDemo from './components/admin/PythonAnalyticsDemo';
+import Payment from './components/Payment';
 import { useTheme } from './context/ThemeContext';
 
 // Wrapper component to apply theme classes
@@ -30,6 +31,7 @@ function ThemedApp() {
             <Route path="/login" element={<Login />} />
             <Route path="/admin/products" element={<AdminProducts />} />
             <Route path="/admin/python-analytics" element={<PythonAnalyticsDemo />} />
+            <Route path="/checkout" element={<Payment />} />
           </Routes>
         </main>
         <Footer />

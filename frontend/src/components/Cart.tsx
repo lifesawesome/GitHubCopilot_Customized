@@ -1,7 +1,14 @@
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useTheme } from '../context/ThemeContext';
 
+/**
+ * Slide-in cart drawer showing all order manifest items, quantity controls,
+ * discount-aware pricing, and a place-order action.
+ * Controlled entirely via `CartContext` — no local open/close state.
+ */
 export const Cart: React.FC = () => {
+  const navigate = useNavigate();
   const { items, isOpen, totalItems, totalPrice, removeFromCart, updateQuantity, clearCart, closeCart } = useCart();
   const { darkMode } = useTheme();
 
@@ -160,7 +167,7 @@ export const Cart: React.FC = () => {
             {/* Actions */}
             <button
               className="w-full bg-primary hover:bg-accent text-white font-semibold py-3 px-4 rounded-lg transition-colors text-sm tracking-wide"
-              onClick={() => alert('Checkout coming soon!')}
+              onClick={() => { closeCart(); navigate('/checkout'); }}
             >
               Place Order
             </button>

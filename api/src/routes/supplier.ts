@@ -36,6 +36,8 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Supplier'
+ *       400:
+ *         description: Invalid supplier payload
  * 
  * /api/suppliers/{id}:
  *   get:
@@ -80,6 +82,8 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Supplier'
+ *       400:
+ *         description: Invalid supplier payload
  *       404:
  *         description: Supplier not found
  *   delete:
@@ -99,56 +103,99 @@
  *         description: Supplier not found
  */
 
-import express from 'express';
+import { Router, type RequestHandler } from 'express';
 import { Supplier } from '../models/supplier';
 import { suppliers as seedSuppliers } from '../seedData';
 
-const router = express.Router();
+const router = Router();
 
 let suppliers: Supplier[] = [...seedSuppliers];
 
-// Create a new supplier
-router.post('/', (req, res) => {
+const isNonEmptyString = (value: unknown): value is string => typeof value === 'string' && value.trim() !== '';
+const isValidEmail = (value: unknown): value is string => typeof value === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+
+const isValidSupplier = (payload: unknown): payload is Supplier => {
+    if (!payload || typeof payload !== 'object') {
+        return false;
+    }
+
+    const candidate = payload as Partial<Supplier>;
+
+    return (
+        typeof candidate.supplierId === 'number' && Number.isInteger(candidate.supplierId) && candidate.supplierId > 0 &&
+        isNonEmptyString(candidate.name) &&
+        isNonEmptyString(candidate.description) &&
+        isNonEmptyString(candidate.contactPerson) &&
+        isValidEmail(candidate.email) &&
+        isNonEmptyString(candidate.phone)
+    );
+};
+
+export const resetSuppliers = () => {
+    suppliers = [...seedSuppliers];
+};
+
+const createSupplier: RequestHandler = ((req, res) => {
+    if (!isValidSupplier(req.body)) {
+        return res.status(400).json({ error: 'Invalid supplier payload' });
+    }
+
     const newSupplier = req.body as Supplier;
     suppliers.push(newSupplier);
-    res.status(201).json(newSupplier);
-});
+    return res.status(201).json(newSupplier);
+}) as any;
 
-// Get all suppliers
-router.get('/', (req, res) => {
-    res.json(suppliers);
-});
+const getAllSuppliers: RequestHandler = (( _req, res) => {
+    return res.json(suppliers);
+}) as any;
 
-// Get a supplier by ID
-router.get('/:id', (req, res) => {
+const getSupplierById: RequestHandler = ((req, res) => {
     const supplier = suppliers.find(s => s.supplierId === parseInt(req.params.id));
     if (supplier) {
-        res.json(supplier);
-    } else {
-        res.status(404).send('Supplier not found');
+        return res.json(supplier);
     }
-});
 
-// Update a supplier by ID
-router.put('/:id', (req, res) => {
+    return res.status(404).json({ error: 'Supplier not found' });
+}) as any;
+
+const updateSupplierById: RequestHandler = ((req, res) => {
     const index = suppliers.findIndex(s => s.supplierId === parseInt(req.params.id));
-    if (index !== -1) {
-        suppliers[index] = req.body;
-        res.json(suppliers[index]);
-    } else {
-        res.status(404).send('Supplier not found');
+    if (index === -1) {
+        return res.status(404).json({ error: 'Supplier not found' });
     }
-});
 
-// Delete a supplier by ID
-router.delete('/:id', (req, res) => {
+    if (!isValidSupplier(req.body)) {
+        return res.status(400).json({ error: 'Invalid supplier payload' });
+    }
+
+    const updatedSupplier = { ...req.body, supplierId: suppliers[index].supplierId } as Supplier;
+    suppliers[index] = updatedSupplier;
+    return res.json(updatedSupplier);
+}) as any;
+
+const deleteSupplierById: RequestHandler = ((req, res) => {
     const index = suppliers.findIndex(s => s.supplierId === parseInt(req.params.id));
     if (index !== -1) {
         suppliers.splice(index, 1);
-        res.status(204).send();
-    } else {
-        res.status(404).send('Supplier not found');
+        return res.status(204).send();
     }
-});
+
+    return res.status(404).json({ error: 'Supplier not found' });
+}) as any;
+
+// Create a new supplier
+router.post('/', createSupplier);
+
+// Get all suppliers
+router.get('/', getAllSuppliers);
+
+// Get a supplier by ID
+router.get('/:id', getSupplierById);
+
+// Update a supplier by ID
+router.put('/:id', updateSupplierById);
+
+// Delete a supplier by ID
+router.delete('/:id', deleteSupplierById);
 
 export default router;

@@ -3,6 +3,10 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
+/**
+ * Renders the login screen and handles demo authentication for the storefront.
+ * Uses the shared theme context to match the current light/dark appearance.
+ */
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -13,12 +17,17 @@ export default function Login() {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
+    // Surface any query-string error from an earlier redirect.
     const errorMsg = searchParams.get('error');
     if (errorMsg) {
       setError(errorMsg);
     }
   }, [searchParams]);
 
+  /**
+   * Attempts to authenticate the user and redirects to the home page on success.
+   * @param e - The submit event from the login form
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {

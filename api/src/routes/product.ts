@@ -36,6 +36,8 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Product'
+ *       400:
+ *         description: Invalid product payload
  * 
  * /api/products/{id}:
  *   get:
@@ -80,6 +82,8 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Product'
+ *       400:
+ *         description: Invalid product payload
  *       404:
  *         description: Product not found
  *   delete:
@@ -99,56 +103,101 @@
  *         description: Product not found
  */
 
-import express from 'express';
+import { Router, type RequestHandler } from 'express';
 import { Product } from '../models/product';
 import { products as seedProducts } from '../seedData';
 
-const router = express.Router();
+const router = Router();
 
 let products: Product[] = [...seedProducts];
 
-// Create a new product
-router.post('/', (req, res) => {
+const isNonEmptyString = (value: unknown): value is string => typeof value === 'string' && value.trim() !== '';
+
+const isValidProduct = (payload: unknown): payload is Product => {
+  if (!payload || typeof payload !== 'object') {
+    return false;
+  }
+
+  const candidate = payload as Partial<Product>;
+
+  return (
+    typeof candidate.productId === 'number' && Number.isInteger(candidate.productId) && candidate.productId > 0 &&
+    typeof candidate.supplierId === 'number' && Number.isInteger(candidate.supplierId) && candidate.supplierId > 0 &&
+    isNonEmptyString(candidate.name) &&
+    isNonEmptyString(candidate.description) &&
+    typeof candidate.price === 'number' && Number.isFinite(candidate.price) && candidate.price > 0 &&
+    isNonEmptyString(candidate.sku) &&
+    isNonEmptyString(candidate.unit) &&
+    isNonEmptyString(candidate.imgName) &&
+    (candidate.discount === undefined || (typeof candidate.discount === 'number' && Number.isFinite(candidate.discount) && candidate.discount >= 0 && candidate.discount <= 1))
+  );
+};
+
+export const resetProducts = () => {
+  products = [...seedProducts];
+};
+
+const createProduct: RequestHandler = ((req, res) => {
+  if (!isValidProduct(req.body)) {
+    return res.status(400).json({ error: 'Invalid product payload' });
+  }
+
   const newProduct: Product = req.body;
   products.push(newProduct);
-  res.status(201).json(newProduct);
-});
+  return res.status(201).json(newProduct);
+}) as any;
 
-// Get all products
-router.get('/', (req, res) => {
-  res.json(products);
-});
+const getAllProducts: RequestHandler = (( _req, res) => {
+  return res.json(products);
+}) as any;
 
-// Get a product by ID
-router.get('/:id', (req, res) => {
+const getProductById: RequestHandler = ((req, res) => {
   const product = products.find(p => p.productId === parseInt(req.params.id));
   if (product) {
-    res.json(product);
-  } else {
-    res.status(404).send('Product not found');
+    return res.json(product);
   }
-});
 
-// Update a product by ID
-router.put('/:id', (req, res) => {
+  return res.status(404).json({ error: 'Product not found' });
+}) as any;
+
+const updateProductById: RequestHandler = ((req, res) => {
   const index = products.findIndex(p => p.productId === parseInt(req.params.id));
-  if (index !== -1) {
-    products[index] = req.body;
-    res.json(products[index]);
-  } else {
-    res.status(404).send('Product not found');
+  if (index === -1) {
+    return res.status(404).json({ error: 'Product not found' });
   }
-});
 
-// Delete a product by ID
-router.delete('/:id', (req, res) => {
+  if (!isValidProduct(req.body)) {
+    return res.status(400).json({ error: 'Invalid product payload' });
+  }
+
+  const updatedProduct = { ...req.body, productId: products[index].productId };
+  products[index] = updatedProduct;
+  return res.json(updatedProduct);
+}) as any;
+
+const deleteProductById: RequestHandler = ((req, res) => {
   const index = products.findIndex(p => p.productId === parseInt(req.params.id));
   if (index !== -1) {
     products.splice(index, 1);
-    res.status(204).send();
-  } else {
-    res.status(404).send('Product not found');
+    return res.status(204).send();
   }
-});
+
+  return res.status(404).json({ error: 'Product not found' });
+}) as any;
+
+// Create a new product
+router.post('/', createProduct);
+
+// Get all products
+router.get('/', getAllProducts);
+
+// Get a product by ID
+router.get('/:id', getProductById);
+
+// Update a product by ID
+router.put('/:id', updateProductById);
+
+// Delete a product by ID
+router.delete('/:id', deleteProductById);
 
 export default router;

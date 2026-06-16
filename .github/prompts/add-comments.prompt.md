@@ -2,6 +2,7 @@
 name: 'add-comments'
 description: 'Add descriptive comments to TypeScript/React code following project conventions'
 agent: 'agent'
+model: MAI-Code-1-Flash (copilot)
 ---
 
 # Add Comments to Code

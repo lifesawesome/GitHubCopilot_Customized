@@ -99,56 +99,95 @@
  *         description: Order not found
  */
 
-import express from 'express';
+import { Router, type RequestHandler } from 'express';
 import { Order } from '../models/order';
 import { orders as seedOrders } from '../seedData';
 
-const router = express.Router();
+const router = Router();
 
 let orders: Order[] = [...seedOrders];
 
-// Create a new order
-router.post('/', (req, res) => {
-  const newOrder: Order = req.body;
+const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null;
+const isNonEmptyString = (value: unknown): value is string => typeof value === 'string' && value.trim().length > 0;
+const isValidOrder = (value: unknown): value is Order => {
+  if (!isRecord(value)) {
+    return false;
+  }
+
+  const order = value as Partial<Order>;
+  return Number.isInteger(order.orderId)
+    && Number.isInteger(order.branchId)
+    && isNonEmptyString(order.orderDate)
+    && isNonEmptyString(order.name)
+    && isNonEmptyString(order.description)
+    && isNonEmptyString(order.status)
+    && ['pending', 'processing', 'shipped', 'delivered', 'cancelled'].includes(order.status);
+};
+
+export const resetOrders = () => {
+  orders = [...seedOrders];
+};
+
+const createOrder: RequestHandler = ((req, res) => {
+  if (!isValidOrder(req.body)) {
+    return res.status(400).json({ error: 'Invalid order payload' });
+  }
+
+  const newOrder = req.body as Order;
   orders.push(newOrder);
-  res.status(201).json(newOrder);
-});
+  return res.status(201).json(newOrder);
+}) as any;
 
-// Get all orders
-router.get('/', (req, res) => {
+const getAllOrders: RequestHandler = (( _req, res) => {
   res.json(orders);
-});
+}) as any;
 
-// Get an order by ID
-router.get('/:id', (req, res) => {
-  const order = orders.find(o => o.orderId === parseInt(req.params.id));
+const getOrderById: RequestHandler = ((req, res) => {
+  const order = orders.find(o => o.orderId === parseInt(req.params.id, 10));
   if (order) {
     res.json(order);
   } else {
-    res.status(404).send('Order not found');
+    res.status(404).json({ error: 'Order not found' });
   }
-});
+}) as any;
 
-// Update an order by ID
-router.put('/:id', (req, res) => {
-  const index = orders.findIndex(o => o.orderId === parseInt(req.params.id));
+const updateOrderById: RequestHandler = ((req, res) => {
+  if (!isValidOrder(req.body)) {
+    return res.status(400).json({ error: 'Invalid order payload' });
+  }
+
+  const index = orders.findIndex(o => o.orderId === parseInt(req.params.id, 10));
   if (index !== -1) {
-    orders[index] = req.body;
-    res.json(orders[index]);
-  } else {
-    res.status(404).send('Order not found');
+    orders[index] = req.body as Order;
+    return res.json(orders[index]);
   }
-});
 
-// Delete an order by ID
-router.delete('/:id', (req, res) => {
-  const index = orders.findIndex(o => o.orderId === parseInt(req.params.id));
+  return res.status(404).json({ error: 'Order not found' });
+}) as any;
+
+const deleteOrderById: RequestHandler = ((req, res) => {
+  const index = orders.findIndex(o => o.orderId === parseInt(req.params.id, 10));
   if (index !== -1) {
     orders.splice(index, 1);
-    res.status(204).send();
-  } else {
-    res.status(404).send('Order not found');
+    return res.status(204).send();
   }
-});
+
+  return res.status(404).json({ error: 'Order not found' });
+}) as any;
+
+// Create a new order
+router.post('/', createOrder);
+
+// Get all orders
+router.get('/', getAllOrders);
+
+// Get an order by ID
+router.get('/:id', getOrderById);
+
+// Update an order by ID
+router.put('/:id', updateOrderById);
+
+// Delete an order by ID
+router.delete('/:id', deleteOrderById);
 
 export default router;

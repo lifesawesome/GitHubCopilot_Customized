@@ -1,0 +1,23 @@
+======================================================================
+OctoCAT Order Details Report
+Generated: 2026-06-15 15:45:36
+======================================================================
+
+  Line #  1 | Order #1 | Meowtown Central   | Smart Feeder Pro       | Qty:   5 | Date: 2026-04-01
+  Line #  2 | Order #1 | Meowtown Central   | Laser Chase 360        | Qty:   2 | Date: 2026-04-01
+  Line #  3 | Order #2 | Meowtown Central   | Litter Dome X          | Qty:   4 | Date: 2026-04-03
+  Line #  4 | Order #2 | Meowtown Central   | PawSense Tracker       | Qty:   3 | Date: 2026-04-03
+  Line #  5 | Order #3 | Tabby Terrace      | Nap Pod Deluxe         | Qty:   2 | Date: 2026-04-07
+  Line #  6 | Order #3 | Tabby Terrace      | CatFlix Window Perch   | Qty:   5 | Date: 2026-04-07
+  Line #  7 | Order #4 | Pawline Point      | Smart Feeder Pro       | Qty:   3 | Date: 2026-04-09
+  Line #  8 | Order #5 | Tabby Terrace      | Laser Chase 360        | Qty:   6 | Date: 2026-04-11
+  Line #  9 | Order #5 | Tabby Terrace      | PawSense Tracker       | Qty:   1 | Date: 2026-04-11
+  Line # 10 | Order #6 | Meowtown Central   | Litter Dome X          | Qty:   5 | Date: 2026-04-15
+  Line # 11 | Order #7 | Pawline Point      | Nap Pod Deluxe         | Qty:   4 | Date: 2026-04-18
+  Line # 12 | Order #7 | Pawline Point      | CatFlix Window Perch   | Qty:   2 | Date: 2026-04-18
+  Line # 13 | Order #8 | Tabby Terrace      | PawSense Tracker       | Qty:   7 | Date: 2026-04-21
+  Line # 14 | Order #8 | Tabby Terrace      | Smart Feeder Pro       | Qty:   2 | Date: 2026-04-21
+
+----------------------------------------------------------------------
+  Total lines: 14    Total quantity: 51
+----------------------------------------------------------------------

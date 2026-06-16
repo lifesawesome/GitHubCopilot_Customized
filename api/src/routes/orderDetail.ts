@@ -99,56 +99,94 @@
  *         description: Order detail not found
  */
 
-import express from 'express';
+import { Router, type RequestHandler } from 'express';
 import { OrderDetail } from '../models/orderDetail';
 import { orderDetails as seedOrderDetails } from '../seedData';
 
-const router = express.Router();
+const router = Router();
 
 let orderDetails: OrderDetail[] = [...seedOrderDetails];
 
-// Create a new order detail
-router.post('/', (req, res) => {
-  const newOrderDetail: OrderDetail = req.body;
+const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null;
+const isValidOrderDetail = (value: unknown): value is OrderDetail => {
+  if (!isRecord(value)) {
+    return false;
+  }
+
+  const orderDetail = value as Partial<OrderDetail>;
+  return Number.isInteger(orderDetail.orderDetailId)
+    && Number.isInteger(orderDetail.orderId)
+    && Number.isInteger(orderDetail.productId)
+    && Number.isInteger(orderDetail.quantity)
+    && typeof orderDetail.unitPrice === 'number'
+    && Number.isFinite(orderDetail.unitPrice)
+    && (typeof orderDetail.notes === 'undefined' || typeof orderDetail.notes === 'string');
+};
+
+export const resetOrderDetails = () => {
+  orderDetails = [...seedOrderDetails];
+};
+
+const createOrderDetail: RequestHandler = ((req, res) => {
+  if (!isValidOrderDetail(req.body)) {
+    return res.status(400).json({ error: 'Invalid order detail payload' });
+  }
+
+  const newOrderDetail = req.body as OrderDetail;
   orderDetails.push(newOrderDetail);
-  res.status(201).json(newOrderDetail);
-});
+  return res.status(201).json(newOrderDetail);
+}) as any;
 
-// Get all order details
-router.get('/', (req, res) => {
+const getAllOrderDetails: RequestHandler = ((_req, res) => {
   res.json(orderDetails);
-});
+}) as any;
 
-// Get an order detail by ID
-router.get('/:id', (req, res) => {
-  const orderDetail = orderDetails.find(od => od.orderDetailId === parseInt(req.params.id));
+const getOrderDetailById: RequestHandler = ((req, res) => {
+  const orderDetail = orderDetails.find(od => od.orderDetailId === parseInt(req.params.id, 10));
   if (orderDetail) {
     res.json(orderDetail);
   } else {
-    res.status(404).send('Order detail not found');
+    res.status(404).json({ error: 'Order detail not found' });
   }
-});
+}) as any;
 
-// Update an order detail by ID
-router.put('/:id', (req, res) => {
-  const index = orderDetails.findIndex(od => od.orderDetailId === parseInt(req.params.id));
+const updateOrderDetailById: RequestHandler = ((req, res) => {
+  if (!isValidOrderDetail(req.body)) {
+    return res.status(400).json({ error: 'Invalid order detail payload' });
+  }
+
+  const index = orderDetails.findIndex(od => od.orderDetailId === parseInt(req.params.id, 10));
   if (index !== -1) {
-    orderDetails[index] = req.body;
-    res.json(orderDetails[index]);
-  } else {
-    res.status(404).send('Order detail not found');
+    orderDetails[index] = req.body as OrderDetail;
+    return res.json(orderDetails[index]);
   }
-});
 
-// Delete an order detail by ID
-router.delete('/:id', (req, res) => {
-  const index = orderDetails.findIndex(od => od.orderDetailId === parseInt(req.params.id));
+  return res.status(404).json({ error: 'Order detail not found' });
+}) as any;
+
+const deleteOrderDetailById: RequestHandler = ((req, res) => {
+  const index = orderDetails.findIndex(od => od.orderDetailId === parseInt(req.params.id, 10));
   if (index !== -1) {
     orderDetails.splice(index, 1);
-    res.status(204).send();
-  } else {
-    res.status(404).send('Order detail not found');
+    return res.status(204).send();
   }
-});
+
+  return res.status(404).json({ error: 'Order detail not found' });
+}) as any;
+
+// Create a new order detail
+router.post('/', createOrderDetail);
+
+// Get all order details
+router.get('/', getAllOrderDetails);
+
+// Get an order detail by ID
+router.get('/:id', getOrderDetailById);
+
+// Update an order detail by ID
+router.put('/:id', updateOrderDetailById);
+
+// Delete an order detail by ID
+router.delete('/:id', deleteOrderDetailById);
 
 export default router;

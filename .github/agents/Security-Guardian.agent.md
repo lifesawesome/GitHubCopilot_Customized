@@ -1,7 +1,9 @@
 ---
 name: Security Guardian
 description: Review code for security vulnerabilities, IP leakage, secrets exposure, and governance compliance
-tools: ['search']
+
+tools: [vscode, execute, read, agent, edit, search, web, browser, github/issue_write, todo]
+
 model: Claude Sonnet 4.6 (copilot)
 ---
 
@@ -25,6 +27,7 @@ You perform comprehensive security reviews across all code in the OctoCAT Supply
 4. **Secure Coding** — Injection, XSS, CORS misconfig, auth bypass, unsafe data handling
 5. **Logging & PII** — Sensitive data in logs, full object dumps, session tokens logged
 6. **Agent Output Safety** — Reviewing Copilot coding agent PRs for scope creep and security
+7. **Skills & Agents** — Ensuring  to use security-audit skills follow security best practices and don't introduce risks
 
 ## Workflow
 

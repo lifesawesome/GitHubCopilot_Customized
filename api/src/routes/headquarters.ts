@@ -36,6 +36,8 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Headquarters'
+ *       400:
+ *         description: Invalid headquarters payload
  * 
  * /api/headquarters/{id}:
  *   get:
@@ -80,6 +82,8 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Headquarters'
+ *       400:
+ *         description: Invalid headquarters payload
  *       404:
  *         description: Headquarters not found
  *   delete:
@@ -107,37 +111,71 @@ const router = express.Router();
 
 let headquartersList: Headquarters[] = [...seedHeadquarters];
 
+const isNonEmptyString = (value: unknown): value is string => typeof value === 'string' && value.trim() !== '';
+const isValidEmail = (value: unknown): value is string => typeof value === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+
+const isValidHeadquarters = (payload: unknown): payload is Headquarters => {
+  if (!payload || typeof payload !== 'object') {
+    return false;
+  }
+
+  const candidate = payload as Partial<Headquarters>;
+
+  return (
+    typeof candidate.headquartersId === 'number' && Number.isInteger(candidate.headquartersId) && candidate.headquartersId > 0 &&
+    isNonEmptyString(candidate.name) &&
+    isNonEmptyString(candidate.description) &&
+    isNonEmptyString(candidate.address) &&
+    isNonEmptyString(candidate.contactPerson) &&
+    isValidEmail(candidate.email) &&
+    isNonEmptyString(candidate.phone)
+  );
+};
+
+export const resetHeadquarters = () => {
+  headquartersList = [...seedHeadquarters];
+};
+
 // Create a new headquarters
 router.post('/', (req, res) => {
+  if (!isValidHeadquarters(req.body)) {
+    return res.status(400).json({ error: 'Invalid headquarters payload' });
+  }
+
   const newHeadquarters: Headquarters = req.body;
   headquartersList.push(newHeadquarters);
-  res.status(201).json(newHeadquarters);
+  return res.status(201).json(newHeadquarters);
 });
 
 // Get all headquarters
 router.get('/', (req, res) => {
-  res.json(headquartersList);
+  return res.json(headquartersList);
 });
 
 // Get a headquarters by ID
 router.get('/:id', (req, res) => {
   const headquarters = headquartersList.find(h => h.headquartersId === parseInt(req.params.id));
   if (headquarters) {
-    res.json(headquarters);
-  } else {
-    res.status(404).send('Headquarters not found');
+    return res.json(headquarters);
   }
+
+  return res.status(404).json({ error: 'Headquarters not found' });
 });
 
 // Update a headquarters by ID
 router.put('/:id', (req, res) => {
   const index = headquartersList.findIndex(h => h.headquartersId === parseInt(req.params.id));
-  if (index !== -1) {
-    headquartersList[index] = req.body;
-    res.json(headquartersList[index]);
-  } else {
-    res.status(404).send('Headquarters not found');
+  if (index === -1) {
+    return res.status(404).json({ error: 'Headquarters not found' });
   }
+
+  if (!isValidHeadquarters(req.body)) {
+    return res.status(400).json({ error: 'Invalid headquarters payload' });
+  }
+
+  const updatedHeadquarters = { ...req.body, headquartersId: headquartersList[index].headquartersId };
+  headquartersList[index] = updatedHeadquarters;
+  return res.json(updatedHeadquarters);
 });
 
 // Delete a headquarters by ID
@@ -145,10 +183,10 @@ router.delete('/:id', (req, res) => {
   const index = headquartersList.findIndex(h => h.headquartersId === parseInt(req.params.id));
   if (index !== -1) {
     headquartersList.splice(index, 1);
-    res.status(204).send();
-  } else {
-    res.status(404).send('Headquarters not found');
+    return res.status(204).send();
   }
+
+  return res.status(404).json({ error: 'Headquarters not found' });
 });
 
 export default router;

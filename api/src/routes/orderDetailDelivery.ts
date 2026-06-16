@@ -99,56 +99,92 @@
  *         description: Order detail delivery not found
  */
 
-import express from 'express';
+import { Router, type RequestHandler } from 'express';
 import { OrderDetailDelivery } from '../models/orderDetailDelivery';
 import { orderDetailDeliveries as seedOrderDetailDeliveries } from '../seedData';
 
-const router = express.Router();
+const router = Router();
 
 let orderDetailDeliveries: OrderDetailDelivery[] = [...seedOrderDetailDeliveries];
 
-// Create a new order detail delivery
-router.post('/', (req, res) => {
-  const newOrderDetailDelivery: OrderDetailDelivery = req.body;
+const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null;
+const isValidOrderDetailDelivery = (value: unknown): value is OrderDetailDelivery => {
+  if (!isRecord(value)) {
+    return false;
+  }
+
+  const orderDetailDelivery = value as Partial<OrderDetailDelivery>;
+  return Number.isInteger(orderDetailDelivery.orderDetailDeliveryId)
+    && Number.isInteger(orderDetailDelivery.orderDetailId)
+    && Number.isInteger(orderDetailDelivery.deliveryId)
+    && Number.isInteger(orderDetailDelivery.quantity)
+    && (typeof orderDetailDelivery.notes === 'undefined' || typeof orderDetailDelivery.notes === 'string');
+};
+
+export const resetOrderDetailDeliveries = () => {
+  orderDetailDeliveries = [...seedOrderDetailDeliveries];
+};
+
+const createOrderDetailDelivery: RequestHandler = ((req, res) => {
+  if (!isValidOrderDetailDelivery(req.body)) {
+    return res.status(400).json({ error: 'Invalid order detail delivery payload' });
+  }
+
+  const newOrderDetailDelivery = req.body as OrderDetailDelivery;
   orderDetailDeliveries.push(newOrderDetailDelivery);
-  res.status(201).json(newOrderDetailDelivery);
-});
+  return res.status(201).json(newOrderDetailDelivery);
+}) as any;
 
-// Get all order detail deliveries
-router.get('/', (req, res) => {
+const getAllOrderDetailDeliveries: RequestHandler = ((_req, res) => {
   res.json(orderDetailDeliveries);
-});
+}) as any;
 
-// Get an order detail delivery by ID
-router.get('/:id', (req, res) => {
-  const orderDetailDelivery = orderDetailDeliveries.find(odd => odd.deliveryId === parseInt(req.params.id));
+const getOrderDetailDeliveryById: RequestHandler = ((req, res) => {
+  const orderDetailDelivery = orderDetailDeliveries.find(odd => odd.orderDetailDeliveryId === parseInt(req.params.id, 10));
   if (orderDetailDelivery) {
     res.json(orderDetailDelivery);
   } else {
-    res.status(404).send('Order detail delivery not found');
+    res.status(404).json({ error: 'Order detail delivery not found' });
   }
-});
+}) as any;
 
-// Update an order detail delivery by ID
-router.put('/:id', (req, res) => {
-  const index = orderDetailDeliveries.findIndex(odd => odd.deliveryId === parseInt(req.params.id));
+const updateOrderDetailDeliveryById: RequestHandler = ((req, res) => {
+  if (!isValidOrderDetailDelivery(req.body)) {
+    return res.status(400).json({ error: 'Invalid order detail delivery payload' });
+  }
+
+  const index = orderDetailDeliveries.findIndex(odd => odd.orderDetailDeliveryId === parseInt(req.params.id, 10));
   if (index !== -1) {
-    orderDetailDeliveries[index] = req.body;
-    res.json(orderDetailDeliveries[index]);
-  } else {
-    res.status(404).send('Order detail delivery not found');
+    orderDetailDeliveries[index] = req.body as OrderDetailDelivery;
+    return res.json(orderDetailDeliveries[index]);
   }
-});
 
-// Delete an order detail delivery by ID
-router.delete('/:id', (req, res) => {
-  const index = orderDetailDeliveries.findIndex(odd => odd.deliveryId === parseInt(req.params.id));
+  return res.status(404).json({ error: 'Order detail delivery not found' });
+}) as any;
+
+const deleteOrderDetailDeliveryById: RequestHandler = ((req, res) => {
+  const index = orderDetailDeliveries.findIndex(odd => odd.orderDetailDeliveryId === parseInt(req.params.id, 10));
   if (index !== -1) {
     orderDetailDeliveries.splice(index, 1);
-    res.status(204).send();
-  } else {
-    res.status(404).send('Order detail delivery not found');
+    return res.status(204).send();
   }
-});
+
+  return res.status(404).json({ error: 'Order detail delivery not found' });
+}) as any;
+
+// Create a new order detail delivery
+router.post('/', createOrderDetailDelivery);
+
+// Get all order detail deliveries
+router.get('/', getAllOrderDetailDeliveries);
+
+// Get an order detail delivery by ID
+router.get('/:id', getOrderDetailDeliveryById);
+
+// Update an order detail delivery by ID
+router.put('/:id', updateOrderDetailDeliveryById);
+
+// Delete an order detail delivery by ID
+router.delete('/:id', deleteOrderDetailDeliveryById);
 
 export default router;
