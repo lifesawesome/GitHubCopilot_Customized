@@ -124,6 +124,29 @@ Or use the VS Code tasks:
 - `Cmd/Ctrl + Shift + P` -> `Run Task` -> `Build All`
 - Use the Debug panel to run `Start API & Frontend`
 
+## 🧪 Development and Testing
+
+```bash
+# Install dependencies
+npm ci
+
+# Run the API test suite
+npm run test --workspace=api
+
+# Build the API and frontend
+npm run build
+
+# Start the full app locally
+npm run dev
+```
+
+### Repository Layout
+
+- `api/` — Express.js REST API and Vitest suite
+- `frontend/` — React + Vite + Tailwind client
+- `docs/` — architecture and build documentation
+- `infra/` — deployment assets
+
 ## 🛠️ MCP Server Setup (Optional)
 
 Use VS Code command palette:
