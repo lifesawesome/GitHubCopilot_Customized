@@ -107,6 +107,11 @@ const router = express.Router();
 
 let headquartersList: Headquarters[] = [...seedHeadquarters];
 
+// Add reset function for testing
+export const resetHeadquarters = () => {
+  headquartersList = [...seedHeadquarters];
+};
+
 // Create a new headquarters
 router.post('/', (req, res) => {
   const newHeadquarters: Headquarters = req.body;

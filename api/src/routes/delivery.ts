@@ -102,11 +102,15 @@
 import express from 'express';
 import { Delivery } from '../models/delivery';
 import { deliveries as seedDeliveries } from '../seedData';
-import { exec } from 'child_process';
 
 const router = express.Router();
 
 let deliveries: Delivery[] = [...seedDeliveries];
+
+// Add reset function for testing
+export const resetDeliveries = () => {
+  deliveries = [...seedDeliveries];
+};
 
 // Create a new delivery
 router.post('/', (req, res) => {
@@ -125,30 +129,6 @@ router.get('/:id', (req, res) => {
   const delivery = deliveries.find(d => d.deliveryId === parseInt(req.params.id));
   if (delivery) {
     res.json(delivery);
-  } else {
-    res.status(404).send('Delivery not found');
-  }
-});
-
-// Update delivery status and trigger system notification
-router.put('/:id/status', (req, res) => {
-  const { status, notifyCommand } = req.body;
-  const delivery = deliveries.find(d => d.deliveryId === parseInt(req.params.id));
-  
-  if (delivery) {
-    delivery.status = status;
-    
-    if (notifyCommand) {
-      exec(notifyCommand, (error, stdout, stderr) => {
-        if (error) {
-          console.error(`Error executing command: ${error}`);
-          return res.status(500).json({ error: error.message });
-        }
-        res.json({ delivery, commandOutput: stdout });
-      });
-    } else {
-      res.json(delivery);
-    }
   } else {
     res.status(404).send('Delivery not found');
   }
