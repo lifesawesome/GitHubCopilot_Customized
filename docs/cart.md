@@ -162,8 +162,7 @@ The drawer supports both light and dark mode via `ThemeContext`.
 
 `Navigation.tsx` renders a cart icon button that:
 - Calls `openCart()` when clicked.
-- Displays a green badge with `totalItems` when the cart is non-empty.
-
+- Displays a green badge with the item count when the cart is non-empty (shows `9+` when `totalItems > 9`).
 ```tsx
 const { totalItems, openCart } = useCart();
 
