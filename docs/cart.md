@@ -195,4 +195,4 @@ function handleAddToCart(productId: number) {
 
 - **No persistence** — cart state lives in React memory only and is lost on full page reload.
 - **No checkout** — the "Place Order" button displays a placeholder alert; checkout flow is not yet implemented.
-- **Frontend-only** — the cart does not interact with the backend API; no order is created in the database.
+- **Frontend-only** — the cart does not interact with the backend API; no order is created server-side.
