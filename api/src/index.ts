@@ -1,4 +1,5 @@
 import express from 'express';
+import helmet from 'helmet';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
@@ -13,6 +14,18 @@ import supplierRoutes from './routes/supplier';
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+// Add security headers
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"], // Required for Swagger UI
+      styleSrc: ["'self'", "'unsafe-inline'"],   // Required for Swagger UI
+      imgSrc: ["'self'", "data:"],
+    },
+  },
+}));
 
 // Parse CORS origins from environment variable if available
 const corsOrigins = process.env.API_CORS_ORIGINS 
