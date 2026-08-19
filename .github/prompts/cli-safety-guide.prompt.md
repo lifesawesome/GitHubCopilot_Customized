@@ -55,7 +55,7 @@ cat src/proprietary-algorithm.ts | gh copilot explain
 gh copilot explain "$(tail -100 /var/log/app.log)"
 
 # ❌ NEVER: Internal URLs in queries
-gh copilot suggest "curl https://internal-api.corp.company.com/v2/users"
+gh copilot suggest "curl https://api.example.com/v2/users"
 ```
 
 ### 3. How to Scope CLI Queries Safely

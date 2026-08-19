@@ -95,7 +95,7 @@
 
 3. Open `api/src/routes/product.ts` and add this line at the top (temporarily):
    ```typescript
-   const DB_PASSWORD = "SuperSecret123!";
+   // Example: const dbPassword = "<YOUR_DATABASE_PASSWORD_HERE>";
    ```
 
 4. Run the prompt again: Command Palette → **Prompts: Run Prompt → pre-commit-security-check**
@@ -161,7 +161,7 @@ python .github/skills/security-audit/scan_internal_references.py .
 ```powershell
 # Create a temporary blocklist
 echo "octocat-internal" > temp-blocklist.txt
-echo "*.secret-service.local" >> temp-blocklist.txt
+echo "*.service.example.com" >> temp-blocklist.txt
 
 # Scan with custom blocklist
 python .github/skills/security-audit/scan_internal_references.py . --blocklist temp-blocklist.txt

@@ -28,9 +28,9 @@ These rules apply globally to **all files** in this repository. They ensure GitH
 
 ```
 # Example blocklist — replace with your organization's terms:
-# internal-api.corp.example.com
+# api.example.com
 # project-codename-phoenix
-# internal-service-mesh.local
+# service.example.com
 # *.internal.example.com
 # ACME-SECRET-*
 ```

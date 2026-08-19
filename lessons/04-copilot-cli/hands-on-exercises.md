@@ -341,7 +341,7 @@ copilot -p "$(cat .env)"
 copilot -p "Explain why ECONNREFUSED happens on port 3000"
 
 # 4
-copilot -p "Why is internal-api.corp.contoso.com returning 503?"
+copilot -p "Why is api.example.com returning 503?"
 
 # 5
 copilot --autopilot --allow-all -p "fix all bugs in the production branch"
@@ -374,9 +374,9 @@ You want to ask Copilot CLI to help debug an internal service error. Practice re
 
 **Unsafe version:**
 ```
-copilot -p "Our order-fulfillment-service at svc-orders.internal.corp.com:8443 
+copilot -p "Our service at api.example.com:8443
 is failing with auth token eyJhbGciOi... when calling the inventory microservice. 
-The internal Redis cluster at redis-prod-3.vpc.corp.com is timing out."
+The cache cluster at cache.example.com is timing out."
 ```
 
 **Your task:** Rewrite this as a safe prompt that still gets useful help. Strip:
