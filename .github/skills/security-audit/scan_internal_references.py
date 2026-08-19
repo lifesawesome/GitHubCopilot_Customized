@@ -27,7 +27,7 @@ BUILTIN_PATTERNS: list[tuple[str, str, str]] = [
     # Internal hostnames
     ("Internal Hostname (.internal.)", r"[a-zA-Z0-9\-]+\.internal\.[a-zA-Z0-9\.\-]+", "HIGH"),
     ("Corporate Hostname (.corp.)", r"[a-zA-Z0-9\-]+\.corp\.[a-zA-Z0-9\.\-]+", "HIGH"),
-    ("Local Service (.local)", r"[a-zA-Z0-9\-]+\.local(?!\host)", "MEDIUM"),
+    ("Local Service (.local)", r"[a-zA-Z0-9\-]+\.local(?!host)", "MEDIUM"),
 
     # Private IP ranges (excluding common dev patterns like 127.0.0.1, 0.0.0.0)
     ("Private IP (10.x.x.x)", r"(?<![\d.])10\.\d{1,3}\.\d{1,3}\.\d{1,3}(?![\d.])", "MEDIUM"),

@@ -548,7 +548,7 @@ Settings cascade: **User** → **Repository** → **Local** (most specific wins)
 |-------|----------|
 | User | `~/.copilot/config.json` |
 | Repository | `.github/copilot/settings.json` (committed) |
-| Local | `.github/copilot/settings.local.json` (gitignored) |
+| Local | `.github/copilot/settings.user.json` (gitignored) |
 
 ---
 

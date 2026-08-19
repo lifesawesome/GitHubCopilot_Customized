@@ -74,8 +74,8 @@ This is the most powerful governance mechanism because it's **always active** wi
 
 | Category | Rule | Example Violation |
 |----------|------|------------------|
-| Secrets | Never hardcode tokens/keys | `const API_KEY = "sk-..."` |
-| IP Protection | No internal hostnames in code | `// calls internal-api.corp.example.com` |
+| Secrets | Never hardcode tokens/keys | `const apiKey = process.env.API_KEY` |
+| IP Protection | No internal hostnames in code | `// calls api.example.com` |
 | Logging | No PII in log output | `console.log(user.email, user.ssn)` |
 | CLI Safety | Don't pipe secrets into CLI | `cat .env \| gh copilot explain` |
 | Agent PRs | Always require human review | Auto-merging agent PRs |
@@ -87,7 +87,7 @@ Organizations customize the internal terms blocklist with their own patterns:
 
 ```
 # Example — replace with your organization's terms:
-internal-api.corp.example.com
+api.example.com
 project-codename-phoenix
 *.internal.example.com
 ```

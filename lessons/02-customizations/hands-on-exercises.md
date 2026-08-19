@@ -267,7 +267,7 @@ Security rules are universal — secrets and IP leakage can happen in any file (
 2. Review the output — does it find any issues in the current codebase?
 3. Now temporarily add a fake secret to any file:
    ```typescript
-   const API_KEY = "sk-1234567890abcdef1234567890abcdef1234567890abcdef";
+   // Example: const apiKey = "<YOUR_API_KEY_HERE>";
    ```
 4. Run the prompt again — observe it catches the hardcoded secret
 5. **Remove the fake secret** immediately!

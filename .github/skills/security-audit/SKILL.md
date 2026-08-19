@@ -37,8 +37,8 @@ Create a `blocklist.txt` file with one pattern per line to scan for organization
 
 ```
 # Internal hostnames
-internal-api.corp.example.com
-*.internal.example.com
+api.example.com
+*.service.example.com
 
 # Project codenames
 project-phoenix

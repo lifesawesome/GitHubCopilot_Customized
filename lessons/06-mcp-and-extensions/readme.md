@@ -225,7 +225,7 @@ You can build your own MCP servers for internal tools:
 import { Server } from '@modelcontextprotocol/sdk/server';
 
 const server = new Server({
-    name: 'internal-api',
+    name: 'example-api',
     version: '1.0.0',
 });
 

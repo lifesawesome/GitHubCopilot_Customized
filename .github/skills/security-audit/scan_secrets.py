@@ -20,7 +20,13 @@ SKIP_DIRS = {
     ".next", "coverage", ".nyc_output",
 }
 
-SKIP_FILES = {"package-lock.json", "yarn.lock", "pnpm-lock.yaml"}
+SKIP_FILES = {
+    "package-lock.json",
+    "yarn.lock",
+    "pnpm-lock.yaml",
+    "pre-commit-security-check.prompt.md",
+    "scan_secrets.py",
+}
 
 # Secret patterns (name, regex, severity)
 SECRET_PATTERNS: list[tuple[str, str, str]] = [
